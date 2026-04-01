@@ -38,37 +38,13 @@
   .bio-text { font-size: 17px; line-height: 1.85; color: rgba(15,15,15,0.82); font-family: var(--serif); }
   .bio-text p + p { margin-top: 18px; }
 
-  .bio-photo {
-    width: 180px;
-    height: 240px;
-    background: var(--surface);
-    border: 1px dashed rgba(0,0,0,0.2);
-    border-radius: 2px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    flex-shrink: 0;
-    overflow: hidden;
-  }
-  .bio-photo img { width: 180px; height: 240px; object-fit: cover; border-radius: 2px; display: block; }
-  .bio-photo-placeholder svg { width: 32px; height: 32px; opacity: 0.2; }
-  .bio-photo-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(15,15,15,0.25); text-align: center; line-height: 1.6; }
-
-  .news-box { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 24px 28px; position: relative; }
+  /* News items — stacked with gap when multiple */
+  .news-list { display: flex; flex-direction: column; gap: 16px; }
+  .news-box { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 24px 28px; }
   .news-tag { display: inline-block; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; margin-bottom: 14px; }
   .news-title { font-family: var(--serif); font-size: 18px; font-weight: 500; margin-bottom: 10px; }
   .news-body { font-family: var(--serif); font-size: 15px; color: var(--muted); line-height: 1.75; margin-bottom: 18px; }
   .news-date { font-family: var(--mono); font-size: 11px; color: rgba(15,15,15,0.3); letter-spacing: 0.08em; }
-  .edit-btn { position: absolute; top: 20px; right: 20px; background: none; border: 1px solid var(--border); border-radius: 3px; color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 10px; cursor: pointer; transition: all 0.2s; }
-  .edit-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .news-edit { display: none; flex-direction: column; gap: 12px; }
-  .news-edit input, .news-edit textarea { background: #fff; border: 1px solid rgba(0,0,0,0.15); border-radius: 3px; color: var(--text); font-family: var(--serif); font-size: 14px; padding: 10px 14px; width: 100%; outline: none; resize: vertical; }
-  .news-edit input:focus, .news-edit textarea:focus { border-color: var(--accent); }
-  .news-edit textarea { min-height: 80px; }
-  .save-btn { align-self: flex-start; background: var(--accent); color: #fff; border: none; border-radius: 3px; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 9px 18px; cursor: pointer; transition: opacity 0.2s; }
-  .save-btn:hover { opacity: 0.85; }
 
   .tour-list { display: flex; flex-direction: column; }
   .tour-item { display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--border); }
@@ -93,7 +69,6 @@
 
   @media (max-width: 560px) {
     .bio-inner { grid-template-columns: 1fr; }
-    .bio-photo { width: 100%; height: 220px; }
     .social-grid { grid-template-columns: 1fr 1fr; }
     .tour-item { grid-template-columns: 70px 1fr; }
     .tour-ticket { display: none; }
@@ -105,9 +80,6 @@
 <div class="site">
 
   <nav>
-    <!-- ============================================================
-         EDIT: Change "Blue Egg" below to update the nav logo text
-         ============================================================ -->
     <div class="nav-name">Blue Egg</div>
     <div class="nav-links">
       <a href="#bio">Bio</a>
@@ -117,7 +89,9 @@
     </div>
   </nav>
 
-  <!-- HERO LOGO — no edits needed here -->
+  <!-- ============================================================
+       HERO LOGO — no edits needed here
+       ============================================================ -->
   <section class="hero">
     <svg class="hero-logo" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -132,39 +106,58 @@
 
   <!-- ================================================================
        LATEST NEWS SECTION
-       Click the "Edit" button on the live site to update this section.
-       Or edit the default values below directly in the HTML.
+
+       HOW TO EDIT A NEWS ITEM:
+         1. Find the news-box block you want to change.
+         2. Edit the text inside news-tag, news-title, news-body, news-date.
+
+       HOW TO ADD A SECOND (OR THIRD) NEWS ITEM:
+         1. Copy the entire block between the dashes below:
+            - - - - - - - - - - CUT HERE - - - - - - - - - -
+            <div class="news-box">
+              <div class="news-tag">New Release</div>
+              <div class="news-title">Your headline here</div>
+              <div class="news-body">Your news text here.</div>
+              <div class="news-date">March 2026</div>
+            </div>
+            - - - - - - - - - - CUT HERE - - - - - - - - - -
+         2. Paste it directly below the existing news-box, inside the news-list div.
+         3. Edit the text in the new block.
+         Items will stack automatically with spacing between them.
+
+       HOW TO REMOVE A NEWS ITEM:
+         Delete the entire <div class="news-box">...</div> block.
        ================================================================ -->
   <section id="news">
     <div class="section-header">
       <div class="section-label">Latest</div>
       <div class="section-line"></div>
     </div>
-    <div class="news-box">
-      <button class="edit-btn" onclick="toggleEdit()">Edit</button>
-      <div class="news-view">
-        <!-- EDIT: Update these default values -->
-        <div class="news-tag" id="view-tag">New Release</div>
-        <div class="news-title" id="view-title">Your headline here</div>
-        <div class="news-body" id="view-body">Write your latest news, announcement, or release info here. Keep it short and punchy.</div>
-        <div class="news-date" id="view-date">March 2026</div>
+
+    <div class="news-list">
+
+      <!-- NEWS ITEM — copy this entire block to add more -->
+      <div class="news-box">
+        <div class="news-tag">New Release</div><!-- EDIT: tag label e.g. "Tour", "News", "New Release" -->
+        <div class="news-title">Your headline here</div><!-- EDIT: headline -->
+        <div class="news-body">Write your latest news, announcement, or release info here. Keep it short and punchy.</div><!-- EDIT: body text -->
+        <div class="news-date">March 2026</div><!-- EDIT: date -->
       </div>
-      <div class="news-edit" id="news-edit-form">
-        <input id="edit-tag" placeholder="Tag (e.g. New Release)" value="New Release">
-        <input id="edit-title" placeholder="Headline" value="Your headline here">
-        <textarea id="edit-body">Write your latest news, announcement, or release info here. Keep it short and punchy.</textarea>
-        <input id="edit-date" placeholder="Date (e.g. March 2026)" value="March 2026">
-        <button class="save-btn" onclick="saveNews()">Save</button>
-      </div>
+      <!-- END NEWS ITEM -->
+
     </div>
   </section>
 
   <!-- ================================================================
        TOUR DATES SECTION
-       EDIT: Replace each tour-item block with your real dates.
-       To add more dates: copy one tour-item block and paste it.
-       To remove a date: delete the whole tour-item block.
-       Update the href="#" on each Tickets link with the real ticket URL.
+
+       HOW TO EDIT A DATE: update the text inside tour-date, tour-venue,
+         tour-location, and replace href="#" with the real ticket URL.
+
+       HOW TO ADD A DATE: copy one full tour-item block and paste it
+         inside the tour-list div. Dates render in the order they appear.
+
+       HOW TO REMOVE A DATE: delete the entire tour-item block.
        ================================================================ -->
   <section id="dates">
     <div class="section-header">
@@ -173,14 +166,16 @@
     </div>
     <div class="tour-list">
 
+      <!-- TOUR DATE — copy this entire block to add more -->
       <div class="tour-item">
-        <div class="tour-date">Apr 12</div><!-- EDIT: Date -->
+        <div class="tour-date">Apr 12</div><!-- EDIT: date -->
         <div>
-          <div class="tour-venue">Venue Name</div><!-- EDIT: Venue -->
-          <div class="tour-location">City, State</div><!-- EDIT: Location -->
+          <div class="tour-venue">Venue Name</div><!-- EDIT: venue -->
+          <div class="tour-location">City, State</div><!-- EDIT: city, state -->
         </div>
-        <a href="#" class="tour-ticket">Tickets</a><!-- EDIT: href with ticket URL -->
+        <a href="#" class="tour-ticket">Tickets</a><!-- EDIT: replace # with ticket URL -->
       </div>
+      <!-- END TOUR DATE -->
 
       <div class="tour-item">
         <div class="tour-date">May 03</div>
@@ -214,11 +209,13 @@
 
   <!-- ================================================================
        BIO SECTION
-       EDIT: Replace the placeholder paragraphs with your real bio.
-       EDIT: To add your artist photo, replace the entire div.bio-photo
-       block with this img tag (add your photo file to the same folder):
-         <img src="photo.jpg" alt="Blue Egg"
-              style="width:180px;height:240px;object-fit:cover;border-radius:2px;">
+
+       EDIT: Replace the placeholder paragraphs with your real bio text.
+       You can add more <p> paragraphs or remove one if you only need one.
+
+       PHOTO: The artist photo is the img tag below the bio text.
+         Replace src="artist.jpg" with your photo filename if it changes.
+         The photo should be in the same folder as index.html on GitHub.
        ================================================================ -->
   <section id="bio">
     <div class="section-header">
@@ -226,19 +223,30 @@
       <div class="section-line"></div>
     </div>
     <div class="bio-inner">
+
       <div class="bio-text">
-        <!-- EDIT: Replace with your bio -->
-        <p>Your bio goes here. Tell your story — where you're from, what drives your sound, and what you've been working on. Keep it grounded and personal.</p>
-        <p>A second paragraph can talk about notable releases, collaborations, or what listeners can expect from your music. Short is fine — let the music speak.</p>
+        <p>Your bio goes here. Tell your story — where you're from, what drives your sound, and what you've been working on. Keep it grounded and personal.</p><!-- EDIT -->
+        <p>A second paragraph can talk about notable releases, collaborations, or what listeners can expect from your music. Short is fine — let the music speak.</p><!-- EDIT -->
       </div>
 
+      <!-- EDIT: update src if your photo filename changes -->
       <img src="artist.jpg" alt="Blue Egg"
-              style="width:180px;height:240px;object-fit:cover;border-radius:2px;">
+           style="width:180px;height:240px;object-fit:cover;border-radius:2px;">
+
+    </div>
+  </section>
 
   <!-- ================================================================
        SOCIAL LINKS SECTION
-       EDIT: Replace each href="#" with your real profile URLs.
-       e.g. href="https://youtube.com/@blueegg"
+
+       EDIT: Replace each href="#" with your real profile URL.
+       Examples:
+         YouTube     → href="https://youtube.com/@blueegg"
+         Instagram   → href="https://instagram.com/blueegg"
+         SoundCloud  → href="https://soundcloud.com/blueegg"
+         Apple Music → href="https://music.apple.com/us/artist/..."
+         Spotify     → href="https://open.spotify.com/artist/..."
+         Bandcamp    → href="https://blueegg.bandcamp.com"
        ================================================================ -->
   <section id="links">
     <div class="section-header">
@@ -247,32 +255,32 @@
     </div>
     <div class="social-grid">
 
-      <a href="#" class="social-link"><!-- EDIT: your YouTube URL -->
+      <a href="#" class="social-link"><!-- EDIT: YouTube URL -->
         <svg class="social-icon" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
         <span class="social-name">YouTube</span>
       </a>
 
-      <a href="#" class="social-link"><!-- EDIT: your Instagram URL -->
+      <a href="#" class="social-link"><!-- EDIT: Instagram URL -->
         <svg class="social-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
         <span class="social-name">Instagram</span>
       </a>
 
-      <a href="#" class="social-link"><!-- EDIT: your SoundCloud URL -->
+      <a href="#" class="social-link"><!-- EDIT: SoundCloud URL -->
         <svg class="social-icon" viewBox="0 0 24 24"><path d="M23.999 14.165c-.052 1.796-1.612 3.169-3.4 3.169h-8.18a.68.68 0 0 1-.675-.683V7.862a.747.747 0 0 1 .452-.724s.75-.513 2.333-.513a5.364 5.364 0 0 1 2.763.755 5.433 5.433 0 0 1 2.57 3.54c.282-.08.574-.121.868-.12.884 0 1.73.358 2.347.992s.948 1.49.922 2.373ZM10.721 8.421c.247 2.98.427 5.697 0 8.672a.264.264 0 0 1-.53 0c-.395-2.946-.22-5.718 0-8.672a.264.264 0 0 1 .53 0ZM9.072 9.448c.285 2.659.37 4.986-.006 7.655a.277.277 0 0 1-.55 0c-.331-2.63-.256-5.02 0-7.655a.277.277 0 0 1 .556 0Zm-1.663-.257c.27 2.726.39 5.171 0 7.904a.266.266 0 0 1-.532 0c-.38-2.69-.257-5.21 0-7.904a.266.266 0 0 1 .532 0Zm-1.647.77a26.108 26.108 0 0 1-.008 7.147.272.272 0 0 1-.542 0 27.955 27.955 0 0 1 0-7.147.275.275 0 0 1 .55 0Zm-1.67 1.769c.421 1.865.228 3.5-.029 5.388a.257.257 0 0 1-.514 0c-.21-1.858-.398-3.549 0-5.389a.272.272 0 0 1 .543 0Zm-1.655-.273c.388 1.897.26 3.508-.01 5.412-.026.28-.514.283-.54 0-.244-1.878-.347-3.54-.01-5.412a.283.283 0 0 1 .56 0Zm-1.668.911c.4 1.268.257 2.292-.026 3.572a.257.257 0 0 1-.514 0c-.241-1.262-.354-2.312-.023-3.572a.283.283 0 0 1 .563 0Z"/></svg>
         <span class="social-name">SoundCloud</span>
       </a>
 
-      <a href="#" class="social-link"><!-- EDIT: your Apple Music URL -->
+      <a href="#" class="social-link"><!-- EDIT: Apple Music URL -->
         <svg class="social-icon" viewBox="0 0 24 24"><path d="M23.994 6.124a9.23 9.23 0 00-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 00-1.877-.726 10.496 10.496 0 00-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026-.747.043-1.49.123-2.193.4-1.336.53-2.3 1.452-2.865 2.78-.192.448-.292.925-.363 1.408-.056.392-.088.785-.1 1.18 0 .032-.007.062-.01.093v12.223c.01.14.017.283.027.424.05.815.154 1.624.497 2.373.65 1.42 1.738 2.353 3.234 2.801.42.127.856.187 1.293.228.555.053 1.11.06 1.667.06h11.03a12.5 12.5 0 001.57-.1c.822-.106 1.596-.35 2.295-.81a5.046 5.046 0 001.88-2.207c.186-.42.293-.87.37-1.324.113-.675.138-1.358.137-2.04-.002-3.8 0-7.595-.003-11.393zm-6.423 3.99v5.712c0 .417-.058.827-.244 1.206-.29.59-.76.962-1.388 1.14-.35.1-.706.157-1.07.173-.95.045-1.773-.6-1.943-1.536a1.88 1.88 0 011.038-2.022c.323-.16.67-.25 1.018-.324.378-.082.758-.153 1.134-.24.274-.063.457-.23.51-.516a.904.904 0 00.02-.193c0-1.815 0-3.63-.002-5.443a.725.725 0 00-.026-.185c-.04-.15-.15-.243-.304-.234-.16.01-.318.035-.475.066-.76.15-1.52.303-2.28.456l-2.325.47-1.374.278c-.016.003-.032.01-.048.013-.277.077-.377.203-.39.49-.002.042 0 .086 0 .13-.002 2.602 0 5.204-.003 7.805 0 .42-.047.836-.215 1.227-.278.64-.77 1.04-1.434 1.233-.35.1-.71.16-1.075.172-.96.036-1.755-.6-1.92-1.544-.14-.812.23-1.685 1.154-2.075.357-.15.73-.232 1.108-.31.287-.06.575-.116.86-.177.383-.083.583-.323.6-.714v-.15c0-2.96 0-5.922.002-8.882 0-.123.013-.25.042-.37.07-.285.273-.448.546-.518.255-.066.515-.112.774-.165.733-.15 1.466-.296 2.2-.444l2.27-.46c.67-.134 1.34-.27 2.01-.403.22-.043.442-.088.663-.106.31-.025.523.17.554.482.008.073.012.148.012.223.002 1.91.002 3.822 0 5.732z"/></svg>
         <span class="social-name">Apple Music</span>
       </a>
 
-      <a href="#" class="social-link"><!-- EDIT: your Spotify URL -->
+      <a href="#" class="social-link"><!-- EDIT: Spotify URL -->
         <svg class="social-icon" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
         <span class="social-name">Spotify</span>
       </a>
 
-      <a href="#" class="social-link"><!-- EDIT: your Bandcamp URL -->
+      <a href="#" class="social-link"><!-- EDIT: Bandcamp URL -->
         <svg class="social-icon" viewBox="0 0 24 24"><path d="M0 18.75l7.437-13.5H24l-7.438 13.5H0z"/></svg>
         <span class="social-name">Bandcamp</span>
       </a>
@@ -282,34 +290,9 @@
 
   <footer>
     <div class="footer-name">Blue Egg</div>
-    <div class="footer-copy">© 2026</div><!-- EDIT: Update year if needed -->
+    <div class="footer-copy">© 2026</div><!-- EDIT: update year if needed -->
   </footer>
 
 </div>
-
-<script>
-  function toggleEdit() {
-    const form = document.getElementById('news-edit-form');
-    const view = document.querySelector('.news-view');
-    const btn = document.querySelector('.edit-btn');
-    const isEditing = form.style.display === 'flex';
-    if (isEditing) {
-      form.style.display = 'none';
-      view.style.display = 'block';
-      btn.textContent = 'Edit';
-    } else {
-      form.style.display = 'flex';
-      view.style.display = 'none';
-      btn.textContent = 'Cancel';
-    }
-  }
-  function saveNews() {
-    document.getElementById('view-tag').textContent = document.getElementById('edit-tag').value;
-    document.getElementById('view-title').textContent = document.getElementById('edit-title').value;
-    document.getElementById('view-body').textContent = document.getElementById('edit-body').value;
-    document.getElementById('view-date').textContent = document.getElementById('edit-date').value;
-    toggleEdit();
-  }
-</script>
 </body>
 </html>
