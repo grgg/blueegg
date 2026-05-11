@@ -47,11 +47,11 @@
 
   /* News */
   .news-list { display: flex; flex-direction: column; gap: 16px; }
-  .news-box { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 24px 28px; }
-  .news-inner { display: block; }
-  .news-content { display: block; }
-  .news-thumb { float: right; width: 120px; height: 120px; object-fit: cover; border-radius: 3px; display: block; margin: 0 0 8px 20px; }
-  .news-content::after { content: ''; display: table; clear: both; }
+  .news-box { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .news-inner { display: flex; align-items: stretch; }
+  .news-content { flex: 1; min-width: 0; padding: 24px 28px; }
+  .news-thumb { width: 140px; flex-shrink: 0; object-fit: cover; display: block; border-radius: 0; }
+  .news-content::after { content: none; }
   .news-tag { display: inline-block; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; margin-bottom: 14px; }
   .news-title { font-family: var(--serif); font-size: 18px; font-weight: 500; margin-bottom: 10px; }
   .news-body { font-family: var(--serif); font-size: 15px; color: var(--muted); line-height: 1.75; margin-bottom: 18px; }
@@ -85,8 +85,10 @@
     .bio-inner { grid-template-columns: 1fr; }
     .bio-inner img { width: 100% !important; height: auto !important; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 2px; }
 
-    /* News: image goes full width between tag and title on mobile */
-    .news-thumb { float: none !important; width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; border-radius: 2px; margin: 12px 0 16px !important; }
+    /* News: stack vertically on mobile, image full width above content */
+    .news-inner { flex-direction: column-reverse; }
+    .news-content { padding: 20px 20px 20px; }
+    .news-thumb { width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; object-fit: cover; }
 
     .social-grid { grid-template-columns: 1fr 1fr; }
     .hero-links .social-grid { grid-template-columns: 1fr 1fr; }
@@ -210,8 +212,6 @@
         <div class="news-inner">
           <div class="news-content">
             <div class="news-tag">New Release</div>
-            <!-- EDIT: replace src with your image filename, or delete this img tag for no image -->
-            <img src="placid.jpg" alt="Placid" class="news-thumb">
             <div class="news-title">Placid</div>
             <div class="news-body">My first track released after many years of silence.
               <a href="https://music.apple.com/us/album/placid-single/1894253392">Apple Music</a>
@@ -220,6 +220,8 @@
             </div>
             <div class="news-date">April 2026</div>
           </div>
+          <!-- EDIT: replace src with your image filename, or delete this img tag for no image -->
+          <img src="placid.jpg" alt="Placid" class="news-thumb">
         </div>
       </div>
       <!-- END NEWS ITEM -->
