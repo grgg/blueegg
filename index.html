@@ -89,6 +89,7 @@
   .bio-text { font-size: 17px; line-height: 1.9; color: rgba(15,15,15,0.82); font-family: var(--serif); }
   .bio-text p + p { margin-top: 18px; }
   .bio-photo { width: 220px; display: block; height: 293px; object-fit: cover; border-radius: 2px; border: 2px solid var(--accent); }
+  .bio-caption { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; color: var(--muted); margin-top: 10px; }
 
   /* News */
   .news-list { display: flex; flex-direction: column; gap: 16px; }
@@ -338,7 +339,10 @@
         <p>Grant Goddard is a producer and musician from Los Angeles California. His focus in synthesis is centered around modular systems. He also works and produces in Ableton Live.</p>
         <p>He's working on producing electronic music that can be used as pieces in hybrid modular / DJ performance. He's finally taking music seriously.</p>
       </div>
-      <img src="grantone.jpg" alt="Blue Egg" class="bio-photo">
+      <div class="bio-photo-wrap">
+        <img src="grantone.jpg" alt="Blue Egg" class="bio-photo">
+        <p class="bio-caption">Grant Goddard — Munich, 2025</p>
+      </div>
     </div>
   </section>
 
