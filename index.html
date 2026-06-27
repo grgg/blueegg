@@ -121,7 +121,7 @@
 
   .social-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .social-divider { grid-column: 1 / -1; display: flex; align-items: center; margin: 6px 0; }
-  .social-divider-line { flex: 1; height: 1px; background: var(--border); }
+  .social-divider-line { flex: 1; height: 0; border-top: 1px solid var(--border); }
   .social-divider-icon { width: 10px; height: 12px; color: rgba(0,0,0,0.3); fill: rgba(0,0,0,0.3); margin: 0 8px; display: block; flex-shrink: 0; }
   .social-link { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 12px 12px; text-decoration: none; color: var(--text); transition: all 0.2s; }
   .social-link:hover { border-color: rgba(26,86,219,0.4); background: rgba(26,86,219,0.04); }
