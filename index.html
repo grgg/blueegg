@@ -4,6 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blue Egg</title>
+
+<!-- ================================================================
+     OPEN GRAPH META TAGS — controls how the site looks when shared
+     on social media, iMessage, Discord, etc.
+     EDIT: Update og:description with your own text.
+     EDIT: og:image points to your favicon — swap for any image on
+           your site for a richer preview (recommended: 1200x630px).
+     ================================================================ -->
+<meta property="og:title" content="Blue Egg">
+<meta property="og:description" content="Electronic music from Los Angeles. Producer and synthesist Grant Goddard.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bluee.gg">
+<meta property="og:image" content="https://bluee.gg/icon-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Blue Egg">
+<meta name="twitter:description" content="Electronic music from Los Angeles. Producer and synthesist Grant Goddard.">
+<meta name="twitter:image" content="https://bluee.gg/icon-512.png">
+
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="icon-512.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -20,7 +38,7 @@
     --mono: 'DM Mono', monospace;
     --serif: 'EB Garamond', serif;
   }
-  body { background: var(--bg); color: var(--text); font-family: var(--serif); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+  body { background: var(--bg); color: var(--text); font-family: var(--serif); min-height: 100vh; font-size: 16px; line-height: 1.7; }
   .site { max-width: 720px; margin: 0 auto; padding: 0 24px 80px; }
 
   nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border); margin-bottom: 64px; position: sticky; top: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100; margin-left: -24px; margin-right: -24px; }
@@ -32,7 +50,7 @@
   .hero { margin-bottom: 32px; display: flex; justify-content: center; }
   .hero-logo { width: 100%; max-width: 660px; display: block; }
 
-  /* Social links directly below hero — two rows of four, full width */
+  /* Social links directly below hero */
   .hero-links { margin-bottom: 64px; }
   .hero-links .social-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 
@@ -41,20 +59,25 @@
   .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
   .section-line { flex: 1; height: 1px; background: var(--border); }
 
-  .bio-inner { display: grid; grid-template-columns: 1fr 180px; gap: 32px; align-items: start; }
-  .bio-text { font-size: 17px; line-height: 1.85; color: rgba(15,15,15,0.82); font-family: var(--serif); }
+  /* Bio: wider photo column, accent border on image */
+  .bio-inner { display: grid; grid-template-columns: 1fr 220px; gap: 32px; align-items: start; }
+  .bio-text { font-size: 17px; line-height: 1.9; color: rgba(15,15,15,0.82); font-family: var(--serif); }
   .bio-text p + p { margin-top: 18px; }
+  .bio-photo { width: 220px; display: block; height: 293px; object-fit: cover; border-radius: 2px; border: 2px solid var(--accent); }
 
   /* News */
   .news-list { display: flex; flex-direction: column; gap: 16px; }
   .news-box { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
   .news-inner { display: flex; align-items: stretch; }
   .news-content { flex: 1; min-width: 0; padding: 24px 28px; }
-  .news-thumb { width: 140px; flex-shrink: 0; object-fit: cover; display: block; border-radius: 0; }
+  /* Thumb locked to square aspect ratio so any image shape crops cleanly */
+  .news-thumb { width: 160px; flex-shrink: 0; aspect-ratio: 1 / 1; object-fit: cover; display: block; align-self: stretch; }
   .news-content::after { content: none; }
   .news-tag { display: inline-block; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; margin-bottom: 14px; }
-  .news-title { font-family: var(--serif); font-size: 18px; font-weight: 500; margin-bottom: 10px; }
-  .news-body { font-family: var(--serif); font-size: 15px; color: var(--muted); line-height: 1.75; margin-bottom: 18px; }
+  /* Larger title for clearer hierarchy */
+  .news-title { font-family: var(--serif); font-size: 22px; font-weight: 500; margin-bottom: 10px; }
+  /* Larger, more readable body text */
+  .news-body { font-family: var(--serif); font-size: 16px; color: var(--muted); line-height: 1.9; margin-bottom: 18px; }
   .news-body a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(26,86,219,0.3); transition: border-color 0.2s; }
   .news-body a:hover { border-color: var(--accent); }
   .news-date { font-family: var(--mono); font-size: 11px; color: rgba(15,15,15,0.3); letter-spacing: 0.08em; }
@@ -83,12 +106,12 @@
   @media (max-width: 560px) {
     /* Bio: photo spans full width, stacked below text */
     .bio-inner { grid-template-columns: 1fr; }
-    .bio-inner img { width: 100% !important; height: auto !important; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 2px; }
+    .bio-photo { width: 100% !important; height: auto !important; aspect-ratio: 3 / 4; object-fit: cover; }
 
     /* News: stack vertically on mobile, image full width above content */
     .news-inner { flex-direction: column-reverse; }
     .news-content { padding: 20px 20px 20px; }
-    .news-thumb { width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; object-fit: cover; }
+    .news-thumb { width: 100% !important; aspect-ratio: 1 / 1; object-fit: cover; }
 
     .social-grid { grid-template-columns: 1fr 1fr; }
     .hero-links .social-grid { grid-template-columns: 1fr 1fr; }
@@ -191,6 +214,7 @@
          Inside news-inner, add after the closing </div> of news-content:
            <img src="yourimage.jpg" alt="description" class="news-thumb">
          Upload the image to GitHub alongside index.html.
+         The image will always be cropped square — works for any image orientation.
          Delete the img tag to show no image.
 
        HOW TO ADD LINKS in the body:
@@ -249,19 +273,6 @@
       </div>
       <!-- END NEWS ITEM -->
 
-      <!-- NEWS ITEM — copy this entire block to add more -->
-      <div class="news-box">
-        <div class="news-inner">
-          <div class="news-content">
-            <div class="news-tag">News</div>
-            <div class="news-title">New Site!</div>
-            <div class="news-body">Welcome to my Eggsite. WIP! Please be nice/like/subscribe/etc.</div>
-            <div class="news-date">March 2026</div>
-          </div>
-        </div>
-      </div>
-      <!-- END NEWS ITEM -->
-
     </div>
   </section>
 
@@ -305,8 +316,8 @@
         <p>Grant Goddard is a producer and musician from Los Angeles California. His focus in synthesis is centered around modular systems. He also works and produces in Ableton Live.</p>
         <p>He's working on producing electronic music that can be used as pieces in hybrid modular / DJ performance. He's finally taking music seriously.</p>
       </div>
-      <img src="grantone.jpg" alt="Blue Egg"
-           style="width:180px;height:240px;object-fit:cover;border-radius:2px;">
+      <!-- EDIT: update src if your photo filename changes -->
+      <img src="grantone.jpg" alt="Blue Egg" class="bio-photo">
     </div>
   </section>
 
