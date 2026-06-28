@@ -1,0 +1,6 @@
+# Local setup notes (personal, not for the public repo)
+SETUP-CHECKLIST.md
+
+# Editor / OS cruft
+.nova/
+.DS_Store
