@@ -85,6 +85,7 @@
     --accent-underline: rgba(26,86,219,0.3);
     --accent-hover-border: rgba(26,86,219,0.4);
     --accent-hover-bg: rgba(26,86,219,0.04);
+    --watermark: rgba(15,15,15,0.08);
   }
 
   /* ===========================================================
@@ -111,6 +112,7 @@
       --accent-underline: rgba(91,141,239,0.4);
       --accent-hover-border: rgba(91,141,239,0.5);
       --accent-hover-bg: rgba(91,141,239,0.08);
+      --watermark: rgba(232,232,234,0.08);
     }
   }
   body { background: var(--bg); color: var(--text); font-family: var(--serif); min-height: 100vh; font-size: 16px; line-height: 1.7; }
@@ -182,6 +184,37 @@
   footer { border-top: 1px solid var(--border); padding-top: 32px; margin-top: 80px; display: flex; justify-content: space-between; align-items: center; }
   .footer-name { font-family: var(--mono); font-size: 12px; color: var(--text-fainter); letter-spacing: 0.1em; text-transform: uppercase; }
   .footer-copy { font-family: var(--mono); font-size: 11px; color: var(--text-faintest); }
+
+  /* Footer watermark easter egg — a faint egg that reveals a Pierce & Pierce-style card on hover */
+  .footer-watermark { position: relative; display: flex; align-items: center; cursor: help; }
+  .footer-watermark-egg { width: 11px; height: 13px; color: var(--watermark); fill: var(--watermark); display: block; transition: color 0.3s, fill 0.3s; }
+  .footer-watermark:hover .footer-watermark-egg { color: var(--text-faint); fill: var(--text-faint); }
+  .footer-watermark::after {
+    content: "Look at that subtle off-white coloring.\A The tasteful thickness of it.\A Oh my God, it even has a watermark.";
+    white-space: pre;
+    position: absolute;
+    bottom: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: #f4f1ea;
+    border: 1px solid rgba(0,0,0,0.18);
+    border-radius: 2px;
+    padding: 22px 30px;
+    font-family: var(--serif);
+    font-size: 12.5px;
+    line-height: 1.85;
+    letter-spacing: 0.06em;
+    text-align: center;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s, transform 0.35s, visibility 0.35s;
+    pointer-events: none;
+    z-index: 200;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.22);
+  }
+  .footer-watermark:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 
   @media (max-width: 560px) {
     .bio-inner { grid-template-columns: 1fr; }
@@ -408,6 +441,7 @@
 
   <footer role="contentinfo">
     <div class="footer-name">Blue Egg</div>
+    <div class="footer-watermark" aria-hidden="true"><svg class="footer-watermark-egg" viewBox="4 2 16 20" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C16.4183 22 20 18.4183 20 14C20 9.58172 16.4183 2 12 2C7.58172 2 4 9.58172 4 14C4 18.4183 7.58172 22 12 22Z" fill="currentColor"/></svg></div>
     <div class="footer-copy">est 2026</div>
   </footer>
 
