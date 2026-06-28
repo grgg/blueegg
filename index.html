@@ -232,6 +232,19 @@
     .tour-ticket { font-size: 10px; padding: 5px 8px; }
     nav { flex-direction: column; gap: 16px; align-items: flex-start; }
     section { scroll-margin-top: 130px; }
+
+    /* Watermark card: center in viewport on mobile so it never clips at screen edges */
+    .footer-watermark::after {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%) translateY(4px);
+      white-space: normal;
+      width: max-content;
+      max-width: calc(100vw - 40px);
+    }
+    .footer-watermark:hover::after { transform: translateX(-50%) translateY(0); }
   }
 </style>
 </head>
