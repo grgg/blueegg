@@ -65,14 +65,14 @@ Defined once in `assets/css/style.css`. Light mode `:root`:
 ```
 --bg: #ffffff;             --surface: #f7f7f5;
 --border: rgba(0,0,0,0.1); --text: #0f0f0f;
---muted: rgba(15,15,15,0.45);
+--muted: rgba(15,15,15,0.6);
 --accent: #1a56db;         (the Blue Egg blue)
 --logo-text: #0f0f0f;      --nav-bg: rgba(255,255,255,0.92);
 --text-strong: rgba(15,15,15,0.82);
---text-faint: rgba(15,15,15,0.3);
---text-fainter: rgba(15,15,15,0.25);
---text-faintest: rgba(15,15,15,0.2);
---egg-divider: rgba(0,0,0,0.3);
+--text-faint: rgba(15,15,15,0.62);
+--text-fainter: rgba(15,15,15,0.6);
+--text-faintest: rgba(15,15,15,0.6);
+--egg-divider: rgba(0,0,0,0.42);
 --accent-underline: rgba(26,86,219,0.3);
 --accent-hover-border: rgba(26,86,219,0.4);
 --accent-hover-bg: rgba(26,86,219,0.04);
@@ -82,16 +82,16 @@ Dark mode `@media (prefers-color-scheme: dark)` overrides:
 ```
 --bg: #0d0f14;             --surface: #16181f;
 --border: rgba(255,255,255,0.12); --text: #e8e8ea;
---muted: rgba(232,232,234,0.5);
+--muted: rgba(232,232,234,0.53);
 --accent: #5b8def;         (brightened blue — keeps SAME perceived color as
                             light mode against the dark bg; the logo egg uses
                             this same variable so accent + egg always match)
 --logo-text: #e8e8ea;      --nav-bg: rgba(13,15,20,0.92);
 --text-strong: rgba(232,232,234,0.85);
---text-faint: rgba(232,232,234,0.4);
---text-fainter: rgba(232,232,234,0.35);
---text-faintest: rgba(232,232,234,0.3);
---egg-divider: rgba(255,255,255,0.35);
+--text-faint: rgba(232,232,234,0.55);
+--text-fainter: rgba(232,232,234,0.53);
+--text-faintest: rgba(232,232,234,0.53);
+--egg-divider: rgba(255,255,255,0.45);
 --accent-underline: rgba(91,141,239,0.4);
 --accent-hover-border: rgba(91,141,239,0.5);
 --accent-hover-bg: rgba(91,141,239,0.08);
@@ -100,6 +100,16 @@ Dark mode `@media (prefers-color-scheme: dark)` overrides:
 **Why the blue brightens in dark mode:** `#1a56db` only hits ~3:1 contrast on
 the dark bg (hard to read); `#5b8def` reaches ~5.9:1. The accent and the logo
 egg move together to the same value so there's never a mismatch.
+
+**Why `--muted` and the `--text-faint*` tokens look "dark for muted":** they're
+tuned so EVERY text element clears WCAG AA (4.5:1) in both modes, measured on its
+actual background (cards use `--surface`, which is slightly darker than the page,
+so the faint tokens need a touch more weight than a pure-white calc suggests).
+The light and dark values are picked to land at matching ratios (~4.9–5.3:1) so
+the two modes stay perceptually paired. If you lighten any of these for looks,
+re-check contrast first. The decorative tokens are intentionally exempt and stay
+faint: `--egg-divider` (brand egg in the dividers), `--border` (hairlines), and
+`--watermark` (the footer easter-egg egg, also `aria-hidden`).
 
 ### Layout
 - Centered column, `max-width: 720px`, `padding: 0 24px 80px`.
@@ -167,12 +177,25 @@ pseudo-elements. Keep all rules/lines as real elements with borders.
 
 ## Accessibility (maintain in all new pages)
 - `lang="en"` on `<html>` (set from `site.lang`).
+- **Color contrast meets WCAG AA (4.5:1) for all text in both modes** — see the
+  color-tokens note above. Don't lighten `--muted` / `--text-faint*` without
+  re-checking.
+- **Heading outline (don't skip levels):** the hero logo SVG is wrapped in the
+  page `<h1>` (`.hero-h1`, needs `width:100%` or the logo shrinks). Section
+  labels are `<h2 class="section-label">` (the class forces `font-weight:400` so
+  DM Mono doesn't render synthetic-bold). Homepage release titles are
+  `<h3>`-wrapped links; release pages use `<h1>` title → `<h2>` section labels.
+- **Skip-link:** `<a class="skip-link" href="#main">` is the first element in
+  `<body>` (in `default.html`); content is wrapped in `<main id="main"
+  tabindex="-1">`. Hidden off-screen until focused. Keep it first and keep the
+  `#main` target.
 - Every find-me link and every Buy/Listen icon link has an `aria-label` with the
-  platform name.
+  platform name. Each `.listen-link` shows a tooltip of that label on hover AND
+  on keyboard focus (`:focus-visible::after`), plus an accent focus ring.
 - Hero SVG: `role="img"` + `aria-label`. Decorative SVGs: `aria-hidden="true"`
   (incl. the `_includes/service-icons.svg` symbol sheet).
 - Nav `role="navigation"`, footer `role="contentinfo"`, release boxes
-  `role="article"`.
+  `role="article"`, page content in `<main>`.
 - All images have meaningful `alt` text. Below-the-fold images use
   `loading="lazy"`.
 

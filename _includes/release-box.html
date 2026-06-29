@@ -10,7 +10,7 @@
   <div class="news-inner">
     <div class="news-content">
       <span class="news-tag">{{ include.post.tag | default: "New Release" }}{% if include.post.type %} &middot; {{ include.post.type }}{% endif %}</span>
-      <a class="news-title" href="{{ include.post.url | relative_url }}">{{ include.post.title }}</a>
+      <h3 class="news-title-h"><a class="news-title" href="{{ include.post.url | relative_url }}">{{ include.post.title }}</a></h3>
       {% if include.post.excerpt %}<p class="news-body">{{ include.post.excerpt | strip_html | normalize_whitespace }}</p>{% endif %}
       <div class="news-actions">
         {% if include.post.bandcamp %}<a class="buy-btn" href="{{ include.post.bandcamp }}"><svg class="buy-icon"><use href="#ic-bandcamp"/></svg>Buy on Bandcamp</a>{% endif %}

@@ -25,14 +25,14 @@ layout: default
 
   {% if page.bandcamp %}
   <div class="release-section">
-    <div class="section-header"><span class="section-label">Buy</span><span class="section-line"></span></div>
+    <div class="section-header"><h2 class="section-label">Buy</h2><span class="section-line"></span></div>
     <a class="buy-btn" href="{{ page.bandcamp }}"><svg class="buy-icon"><use href="#ic-bandcamp"/></svg>Buy on Bandcamp</a>
   </div>
   {% endif %}
 
   {% if page.apple or page.spotify or page.amazon or page.youtube or page.pandora or page.soundcloud or page.iheart or page.deezer or page.tidal %}
   <div class="release-section">
-    <div class="section-header"><span class="section-label">Listen</span><span class="section-line"></span></div>
+    <div class="section-header"><h2 class="section-label">Listen</h2><span class="section-line"></span></div>
     <div class="listen-row">
       {% if page.apple %}<a class="listen-link" href="{{ page.apple }}" aria-label="Apple Music"><svg class="listen-icon"><use href="#ic-apple"/></svg></a>{% endif %}
       {% if page.spotify %}<a class="listen-link" href="{{ page.spotify }}" aria-label="Spotify"><svg class="listen-icon"><use href="#ic-spotify"/></svg></a>{% endif %}
@@ -49,7 +49,7 @@ layout: default
 
   {% if page.tracklist %}
   <div class="release-section">
-    <div class="section-header"><span class="section-label">Tracklist</span><span class="section-line"></span></div>
+    <div class="section-header"><h2 class="section-label">Tracklist</h2><span class="section-line"></span></div>
     <ul class="tracklist">
       {% for track in page.tracklist %}
       <li><span class="track-num">{{ forloop.index }}</span><span>{{ track.title }}</span>{% if track.duration %}<span class="track-dur">{{ track.duration }}</span>{% endif %}</li>
@@ -60,14 +60,14 @@ layout: default
 
   {% if page.production_notes %}
   <div class="release-section">
-    <div class="section-header"><span class="section-label">Production Notes</span><span class="section-line"></span></div>
+    <div class="section-header"><h2 class="section-label">Production Notes</h2><span class="section-line"></span></div>
     <div class="liner-body">{{ page.production_notes | markdownify }}</div>
   </div>
   {% endif %}
 
   {% if page.credits %}
   <div class="release-section">
-    <div class="section-header"><span class="section-label">Credits</span><span class="section-line"></span></div>
+    <div class="section-header"><h2 class="section-label">Credits</h2><span class="section-line"></span></div>
     <div class="liner-body">{{ page.credits | markdownify }}</div>
   </div>
   {% endif %}
