@@ -14,13 +14,20 @@
       {% if include.post.excerpt %}<p class="news-body">{{ include.post.excerpt | strip_html | normalize_whitespace }}</p>{% endif %}
       <div class="news-actions">
         {% if include.post.bandcamp %}<a class="buy-btn" href="{{ include.post.bandcamp }}"><svg class="buy-icon"><use href="#ic-bandcamp"/></svg>Buy on Bandcamp</a>{% endif %}
-        <div class="listen-row">
-          {% if include.post.apple %}<a class="listen-link" href="{{ include.post.apple }}" aria-label="Apple Music"><svg class="listen-icon"><use href="#ic-apple"/></svg></a>{% endif %}
-          {% if include.post.spotify %}<a class="listen-link" href="{{ include.post.spotify }}" aria-label="Spotify"><svg class="listen-icon"><use href="#ic-spotify"/></svg></a>{% endif %}
-          {% if include.post.amazon %}<a class="listen-link" href="{{ include.post.amazon }}" aria-label="Amazon Music"><svg class="listen-icon"><use href="#ic-amazon"/></svg></a>{% endif %}
-          {% if include.post.youtube %}<a class="listen-link" href="{{ include.post.youtube }}" aria-label="YouTube Music"><svg class="listen-icon"><use href="#ic-youtube"/></svg></a>{% endif %}
-          {% if include.post.soundcloud %}<a class="listen-link" href="{{ include.post.soundcloud }}" aria-label="SoundCloud"><svg class="listen-icon"><use href="#ic-soundcloud"/></svg></a>{% endif %}
-        </div>
+        <details class="stream">
+          <summary class="stream-btn"><svg class="buy-icon"><use href="#ic-egg"/></svg>Listen<span class="caret">&#9662;</span></summary>
+          <div class="stream-menu">
+            {% if include.post.apple %}<a href="{{ include.post.apple }}"><svg class="listen-icon"><use href="#ic-apple"/></svg>Apple Music</a>{% endif %}
+            {% if include.post.spotify %}<a href="{{ include.post.spotify }}"><svg class="listen-icon"><use href="#ic-spotify"/></svg>Spotify</a>{% endif %}
+            {% if include.post.youtube %}<a href="{{ include.post.youtube }}"><svg class="listen-icon"><use href="#ic-youtube"/></svg>YouTube Music</a>{% endif %}
+            {% if include.post.soundcloud %}<a href="{{ include.post.soundcloud }}"><svg class="listen-icon"><use href="#ic-soundcloud"/></svg>SoundCloud</a>{% endif %}
+            {% if include.post.tidal %}<a href="{{ include.post.tidal }}"><svg class="listen-icon"><use href="#ic-tidal"/></svg>Tidal</a>{% endif %}
+            {% if include.post.deezer %}<a href="{{ include.post.deezer }}"><svg class="listen-icon"><use href="#ic-deezer"/></svg>Deezer</a>{% endif %}
+            {% if include.post.amazon %}<a href="{{ include.post.amazon }}"><svg class="listen-icon"><use href="#ic-amazon"/></svg>Amazon Music</a>{% endif %}
+            {% if include.post.iheart %}<a href="{{ include.post.iheart }}"><svg class="listen-icon"><use href="#ic-iheart"/></svg>iHeartRadio</a>{% endif %}
+            {% if include.post.pandora %}<a href="{{ include.post.pandora }}"><svg class="listen-icon"><use href="#ic-pandora"/></svg>Pandora</a>{% endif %}
+          </div>
+        </details>
       </div>
       <div class="news-foot">
         <span class="news-date">{{ include.post.date | date: "%B %Y" }}</span>

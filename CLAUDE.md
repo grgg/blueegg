@@ -140,10 +140,10 @@ egg move together to the same value so there's never a mismatch.
   consistent — earlier accent-filled versions were rejected).
 - **Listen** = an icon-only row.
 - **10 services, fixed order, Bandcamp first (artist-forward):** Bandcamp(Buy),
-  Apple Music, Spotify, Amazon Music, YouTube Music, SoundCloud, Pandora,
-  iHeartRadio, Deezer, Tidal. Render only when the post has that URL.
-- **Homepage box** shows Buy + 5 primary services (Apple, Spotify, Amazon,
-  YouTube Music, SoundCloud) inline on desktop, stacked + centered on mobile.
+  Apple Music, Spotify, YouTube Music, SoundCloud, Tidal, Deezer, Amazon Music,
+  iHeartRadio, Pandora. Render only when the post has that URL.
+- **Homepage box** shows Buy + 5 services (Apple, Spotify, YouTube Music,
+  SoundCloud, Amazon) inline on desktop, stacked + centered on mobile.
   **Release page** shows the full 10.
 
 ### Dividers — dark-mode-plugin-safe
@@ -282,3 +282,21 @@ The pill reads `tag · type`. The card meta row reads `genre · label · date`
 - **Adding a release:** drop a `_posts/YYYY-MM-DD-slug.md` + its art in
   `assets/images/releases/`. The homepage list, the release page, the RSS feed,
   and the sitemap all update automatically. No other files to touch.
+- **Cover art:** square, and keep files lean — the build does NOT resize. Export
+  around 800–1000px (≈150–300KB). The art doubles as the per-release `og:image`
+  (set to 800×800 in `default.html`). To shrink an oversized source with sips:
+  `sips -Z 800 -s format jpeg -s formatOptions 68 file.jpg --out file.jpg`.
+
+---
+
+## Future ideas (owner interested, not doing now)
+- **Email capture / mailing list** — own the audience directly instead of only
+  routing fans out to streaming platforms. A single signup field (Buttondown,
+  ConvertKit, etc.), likely in the footer. Most impactful growth lever for an
+  independent artist; revisit when ready.
+- **Privacy-friendly analytics** — e.g. Plausible or GoatCounter with outbound
+  link tracking, to see which services fans click from the "Listen" menu.
+  Deliberately no Google Analytics. Revisit when there's a reason to.
+- The "Listen" disclosure is effectively a self-hosted smart link (own it, no
+  third-party redirect/tracking). If a "click outside to close" is ever wanted,
+  it needs a few lines of JS (would break the current no-JS purity).

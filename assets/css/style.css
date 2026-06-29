@@ -83,7 +83,8 @@ section { margin-bottom: 72px; scroll-margin-top: 72px; }
 
 /* News */
 .news-list { display: flex; flex-direction: column; gap: 16px; }
-.news-box { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+/* overflow visible so the Listen dropdown can escape the box; mobile re-clips it (full-bleed art) */
+.news-box { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: visible; }
 .news-inner { display: flex; align-items: stretch; }
 .news-content { flex: 1; min-width: 0; padding: 24px 28px; display: flex; flex-direction: column; }
 /*
@@ -118,6 +119,21 @@ section { margin-bottom: 72px; scroll-margin-top: 72px; }
 .news-actions .buy-btn { font-size: 11px; padding: 9px 14px; }
 .news-actions .listen-link { width: 40px; height: 40px; }
 .news-actions .listen-icon, .news-actions .buy-icon { width: 15px; height: 15px; }
+
+/* Listen disclosure — a button that reveals a menu of all streaming services (native <details>, no JS).
+   Desktop: floating dropdown. Mobile: expands inline (see the media query). */
+.stream { position: relative; }
+.news-actions summary.stream-btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); border-radius: 4px; padding: 9px 14px; background: var(--surface); cursor: pointer; list-style: none; transition: all 0.2s; }
+.news-actions summary.stream-btn::-webkit-details-marker { display: none; }
+.news-actions summary.stream-btn:hover { border-color: var(--accent-hover-border); background: var(--accent-hover-bg); color: var(--accent); }
+.stream[open] summary.stream-btn { color: var(--accent); border-color: var(--accent-hover-border); background: var(--accent-hover-bg); }
+.stream .caret { font-size: 9px; transition: transform 0.2s; }
+.stream[open] .caret { transform: rotate(180deg); }
+.stream-menu { position: absolute; top: calc(100% + 6px); left: 0; min-width: 210px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.18); padding: 6px; z-index: 30; }
+.stream-menu a { display: flex; align-items: center; gap: 11px; padding: 8px 10px; border-radius: 4px; text-decoration: none; color: var(--text); font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; transition: background 0.15s, color 0.15s; }
+.stream-menu a:hover { background: var(--accent-hover-bg); color: var(--accent); }
+.stream-menu .listen-icon { width: 16px; height: 16px; fill: var(--muted); flex-shrink: 0; }
+.stream-menu a:hover .listen-icon { fill: var(--accent); }
 
 .tour-list { display: flex; flex-direction: column; }
 .tour-item { display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--border); }
@@ -244,9 +260,15 @@ footer { border-top: 1px solid var(--border); padding-top: 32px; margin-top: 80p
   .news-more--aside { display: none; }
   .news-foot .news-more { display: inline-block; }
 
-  /* Mobile homepage actions: stack Buy above the icon row and center both */
-  .news-actions { flex-direction: column; align-items: center; gap: 10px; }
-  .news-actions .listen-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  /* Mobile homepage actions: full-width Buy + Listen buttons stacked; the Listen
+     menu expands inline (pushes content down) instead of floating. Box re-clips
+     so the full-bleed artwork corners stay rounded. */
+  .news-box { overflow: hidden; }
+  .news-actions { flex-direction: column; align-items: stretch; gap: 10px; }
+  /* full-width Buy + Listen; the summary must fill the <details> (it doesn't stretch on its own) */
+  .news-actions .stream { width: 100%; }
+  .news-actions .buy-btn, .news-actions summary.stream-btn { width: 100%; justify-content: center; }
+  .stream-menu { position: static; min-width: 0; width: 100%; box-shadow: none; margin-top: 8px; }
 
   /* Hero find-me: locked grids on mobile so they never wrap raggedly */
   .find-row--music { display: grid; grid-template-columns: repeat(5, 44px); justify-content: center; gap: 10px; }

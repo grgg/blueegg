@@ -37,10 +37,13 @@
 <meta property="og:url" content="{{ page.url | absolute_url }}">
 <meta property="og:site_name" content="Blue Egg">
 <meta property="og:image" content="{{ og_image }}">
-{%- unless page.art %}
+{%- if page.art %}
+<meta property="og:image:width" content="800">
+<meta property="og:image:height" content="800">
+{%- else %}
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-{%- endunless %}
+{%- endif %}
 <meta property="og:image:alt" content="{% if page.art %}{{ page.title }} album art{% else %}Blue Egg logo{% endif %}">
 
 <!-- Twitter / X -->
@@ -51,8 +54,14 @@
 
 <!-- Structured data -->
 {%- if page.layout == 'release' %}
+{%- assign iso_dur = "" -%}
+{%- if page.tracklist and page.tracklist[0].duration -%}
+  {%- assign dparts = page.tracklist[0].duration | split: ":" -%}
+  {%- if dparts.size == 3 -%}{%- capture iso_dur -%}PT{{ dparts[0] }}H{{ dparts[1] }}M{{ dparts[2] }}S{%- endcapture -%}
+  {%- elsif dparts.size == 2 -%}{%- capture iso_dur -%}PT{{ dparts[0] }}M{{ dparts[1] }}S{%- endcapture -%}{%- endif -%}
+{%- endif -%}
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"MusicRecording","name":{{ page.title | jsonify }},"url":{{ page.url | absolute_url | jsonify }},"datePublished":"{{ page.date | date: '%Y-%m-%d' }}","image":{{ og_image | jsonify }},"byArtist":{"@type":"MusicGroup","name":"Blue Egg","url":"https://bluee.gg"}{% if page.genre %},"genre":{{ page.genre | jsonify }}{% endif %}{% if page.isrc %},"isrcCode":{{ page.isrc | jsonify }}{% endif %}}
+{"@context":"https://schema.org","@type":"MusicRecording","name":{{ page.title | jsonify }},"url":{{ page.url | absolute_url | jsonify }},"datePublished":"{{ page.date | date: '%Y-%m-%d' }}","image":{{ og_image | jsonify }},"byArtist":{"@type":"MusicGroup","name":"Blue Egg","url":"https://bluee.gg"}{% if page.genre %},"genre":{{ page.genre | jsonify }}{% endif %}{% if iso_dur != "" %},"duration":{{ iso_dur | jsonify }}{% endif %}{% if page.isrc %},"isrcCode":{{ page.isrc | jsonify }}{% endif %}}
 </script>
 {%- else %}
 <script type="application/ld+json">
@@ -63,6 +72,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/icon-512.png" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="Blue Egg" href="{{ '/feed.xml' | absolute_url }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
