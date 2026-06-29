@@ -9,8 +9,9 @@ timezone: America/Los_Angeles
 permalink: /:title/
 
 plugins:
-  - jekyll-feed
   - jekyll-sitemap
+# feed.xml is a custom Atom template (not jekyll-feed) so each item can carry
+# the cover, teaser, and streaming links instead of just the post body.
 
 # Every post is a release page unless it says otherwise.
 defaults:
