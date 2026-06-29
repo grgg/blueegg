@@ -16,10 +16,23 @@ project of **Grant Goddard**, a producer and musician from Los Angeles.
 - **Custom domain:** bluee.gg via Porkbun DNS. Managed by the `CNAME` file in
   the repo root — do not delete it.
 
-The site is currently a **single hand-built `index.html`** with all CSS inline.
-The near-term project (see "Migration plan" below) is to convert it to **Jekyll**
-so that music releases become individual posts with their own shareable URLs and
-an auto-generated RSS feed.
+The site is a **Jekyll site** (migrated in 2026 from a single hand-built
+`index.html`). Each music release is a Markdown post in `_posts/` with its own
+shareable URL (e.g. `bluee.gg/echoic/`), and `jekyll-feed` / `jekyll-sitemap`
+auto-generate the RSS feed and sitemap. GitHub Pages builds it natively (no
+Actions); the plugins are on the Pages allowlist.
+
+---
+
+## Local development
+
+- Ruby is managed with **chruby + ruby-install** (Homebrew). Active Ruby:
+  **3.3.6** at `~/.rubies/ruby-3.3.6` (never the macOS system Ruby). `~/.zshrc`
+  auto-activates it; a brand-new terminal "just works."
+- The `Gemfile` uses the **`github-pages` gem**, which pins **Jekyll 3.10** and
+  the plugins to the exact versions GitHub Pages runs, so local == production.
+- Workflow: `bundle install` once, then `bundle exec jekyll serve` →
+  `http://localhost:4000`. Always verify locally before pushing.
 
 ---
 
@@ -29,15 +42,18 @@ an auto-generated RSS feed.
 - **Do not make changes that weren't discussed.** When asked for a specific
   change, make exactly that change — don't "improve" copy, restructure, or
   retheme unprompted. Surface suggestions separately and let the owner decide.
+- **Do not invent content** (labels, genres, credits, etc.). Leave unknown
+  fields as commented placeholders for the owner to fill.
 - **No em dashes in body copy / site text.** The owner prefers commas or
-  rephrasing. (Em dashes in code comments are fine.)
+  rephrasing. (Em dashes in code comments are fine.) Separators in UI use a
+  middot `·` (e.g. the release pill "New Release · Single", the meta row).
 - Prefers consistency between light and dark mode — changes to one mode should
   generally be mirrored in the other so the two stay perceptually matched.
 - Posts will be roughly monthly to twice-monthly.
 
 ---
 
-## Design system (carry this over exactly in the Jekyll migration)
+## Design system
 
 ### Fonts (Google Fonts)
 - **DM Mono** (weights 400, 500) — labels, nav, dates, metadata, captions.
@@ -45,7 +61,7 @@ an auto-generated RSS feed.
 - The logo wordmark is NOT a font — it's baked-in vector paths (see Logo below).
 
 ### Color tokens — these are CSS variables; dark mode redefines them
-Light mode `:root`:
+Defined once in `assets/css/style.css`. Light mode `:root`:
 ```
 --bg: #ffffff;             --surface: #f7f7f5;
 --border: rgba(0,0,0,0.1); --text: #0f0f0f;
@@ -88,7 +104,8 @@ egg move together to the same value so there's never a mismatch.
 ### Layout
 - Centered column, `max-width: 720px`, `padding: 0 24px 80px`.
 - Sticky frosted nav (`backdrop-filter: blur(8px)`, uses `--nav-bg`).
-- Base 16px, line-height 1.7.
+- Base 16px, line-height 1.7. Everything is left-aligned (only the hero logo,
+  and the homepage box actions *on mobile*, are centered).
 - Mobile breakpoint at `max-width: 560px` (layout-only overrides, no color
   changes — colors all come from variables that adapt automatically).
 
@@ -103,10 +120,31 @@ egg move together to the same value so there's never a mismatch.
 
 ### The egg motif (brand signature, appears at three scales)
 - Full size in the hero logo.
-- Tiny in the social-links divider (between the music row and social row).
+- Tiny in the find-me-links divider (between the music row and social row).
 - Barely-visible in the footer as the watermark easter egg (see below).
 - The egg path (reused everywhere):
   `M12 22C16.4183 22 20 18.4183 20 14C20 9.58172 16.4183 2 12 2C7.58172 2 4 9.58172 4 14C4 18.4183 7.58172 22 12 22Z`
+
+### Streaming-link components (Buy / Listen)
+- **Icons** are monochrome inline SVG `<symbol>`s defined ONCE in
+  `_includes/service-icons.svg` and referenced via `<use href="#ic-...">`. They
+  inherit color from CSS (`fill: var(--muted)`, hover `var(--accent)`), so they
+  adapt to dark mode automatically. Slugs: `ic-bandcamp, ic-apple, ic-spotify,
+  ic-amazon, ic-youtube, ic-pandora, ic-soundcloud, ic-iheart, ic-deezer,
+  ic-tidal`. Most are Simple Icons paths; **Amazon** is the "a"+smile mark
+  (no clean square glyph exists), **iHeart** is the heart mark with the wordmark
+  cropped out via viewBox.
+- **Buy** = a labeled button "Buy on Bandcamp" using the same `.social-link`
+  treatment as the icons (surface bg, border, hover→accent). It stands out via
+  its text label + its own section, NOT via color (keeps the icon set
+  consistent — earlier accent-filled versions were rejected).
+- **Listen** = an icon-only row.
+- **10 services, fixed order, Bandcamp first (artist-forward):** Bandcamp(Buy),
+  Apple Music, Spotify, Amazon Music, YouTube Music, SoundCloud, Pandora,
+  iHeartRadio, Deezer, Tidal. Render only when the post has that URL.
+- **Homepage box** shows Buy + 5 primary services (Apple, Spotify, Amazon,
+  YouTube Music, SoundCloud) inline on desktop, stacked + centered on mobile.
+  **Release page** shows the full 10.
 
 ### Dividers — dark-mode-plugin-safe
 All divider lines use `border-top: 1px solid var(--border)` (NOT
@@ -128,130 +166,119 @@ pseudo-elements. Keep all rules/lines as real elements with borders.
 ---
 
 ## Accessibility (maintain in all new pages)
-- `lang="en"` on `<html>`.
-- All 8 social links have `aria-label` with the platform name.
-- Hero SVG: `role="img"` + `aria-label`. Decorative SVGs: `aria-hidden="true"`.
-- Nav `role="navigation"`, footer `role="contentinfo"`, news items
+- `lang="en"` on `<html>` (set from `site.lang`).
+- Every find-me link and every Buy/Listen icon link has an `aria-label` with the
+  platform name.
+- Hero SVG: `role="img"` + `aria-label`. Decorative SVGs: `aria-hidden="true"`
+  (incl. the `_includes/service-icons.svg` symbol sheet).
+- Nav `role="navigation"`, footer `role="contentinfo"`, release boxes
   `role="article"`.
 - All images have meaningful `alt` text. Below-the-fold images use
   `loading="lazy"`.
 
 ---
 
-## SEO / meta (already on index.html; replicate per-page in Jekyll)
-- `<link rel="canonical">`, scheme-aware `theme-color` (white for light,
-  `#0d0f14` for dark), meta description, Open Graph tags (incl.
-  `og:image:width/height/alt`), Twitter `summary_large_image` card,
-  and JSON-LD `MusicGroup` structured data with all social `sameAs` links.
-- `robots.txt` and `sitemap.xml` exist at root. The owner wants the site found
-  for: blue egg, electronic music, techno, grant goddard, los angeles.
-- The bio body intentionally contains the word "techno" for search.
+## SEO / meta
+- The shared `<head>` lives in `_layouts/default.html` and is per-page aware:
+  `<title>` ("Release · Blue Egg"), canonical, scheme-aware `theme-color`, meta
+  description (from the post teaser/excerpt), Open Graph + Twitter card.
+- **Per-release OG card:** each release page sets `og:image` to its **cover art**
+  so shared links render the artwork; `og:type` `music.song`; JSON-LD
+  `MusicRecording` with `byArtist` Blue Egg.
+- **Homepage JSON-LD** is `MusicGroup` with the **`sameAs` ("also known as")
+  links** — currently **14**: the 10 streaming artist pages + Last.fm + Instagram
+  + Twitch + the YouTube video channel. This is the main Knowledge Graph signal;
+  edit it in ONE place (`_layouts/default.html`).
+- `robots.txt` stays at root. `sitemap.xml` and `feed.xml` are AUTO-generated by
+  the plugins — do not hand-edit. Feed discovery link is in `<head>`.
+- Target search terms: blue egg, electronic music, techno, grant goddard, los
+  angeles. The bio body intentionally contains "techno."
 
 ---
 
-## Social / streaming URLs (the 8 links, in grid order)
+## Social / streaming URLs
+
+### Hero "find me" grid (homepage, 8 links in grid order — artist profiles)
 Row 1 (music): Apple Music `music.apple.com/us/artist/blue-egg/1709237243`,
 Bandcamp `blueegg.bandcamp.com`, Spotify
-`open.spotify.com/artist/5YjeU3znfJ2FpbJ3e38LhX`, Tidal
-`tidal.com/artist/78118208`.
+`open.spotify.com/artist/5YjeU3znfJ2FpbJ3e38LhX`, Tidal `tidal.com/artist/78118208`.
 Row 2 (social): SoundCloud `soundcloud.com/blueeggclub`, Instagram
 `instagram.com/blueegg`, Twitch `twitch.tv/blueeggclub`, YouTube
 `youtube.com/@blueeggclub`.
 
+### Artist profiles for `sameAs` (all known, kept in `default.html`)
+Bandcamp `blueegg.bandcamp.com/`, Apple Music `.../artist/blue-egg/1709237243`,
+Spotify `.../artist/5YjeU3znfJ2FpbJ3e38LhX`, Amazon Music
+`music.amazon.com/artists/B0GXL2RW5B/blue-egg`, YouTube Music
+`music.youtube.com/channel/UCNNEL8FXW5NWnfWGqDTQoWg`, Pandora
+`pandora.com/artist/blue-egg/AR27ccfZZ7Vvtk6`, SoundCloud `soundcloud.com/blueeggclub`,
+iHeartRadio `iheart.com/artist/blue-egg-50443833/`, Deezer
+`deezer.com/us/artist/385952371`, Tidal `tidal.com/artist/78118208`, Last.fm
+`last.fm/music/blue+egg`, plus Instagram, Twitch, YouTube channel.
+
+### Per-release streaming links
+Live in each post's front matter (track/album URLs, not artist URLs). Render
+only when present.
+
 ---
 
-## Current content
-- **Two releases** (currently hand-coded news boxes in index.html):
-  - "Echoic" — May 2026, art `echoic-web.jpeg`, links to Apple/Bandcamp/SC/Spotify.
-  - "Placid" — April 2026, art `placid.jpg`, links to Apple/Bandcamp/SC/Spotify.
-- **Bio:** Grant Goddard, LA producer; modular synthesis + Ableton; hybrid
-  modular/DJ techno on CDJs synced to modular synth and drum voices. Photo
-  `grantone.jpg`, caption "Grant Goddard — Munich, 2024".
-- **Tour dates** and **bio** are NOT posts — keep them as simple editable
-  sections, not structured content.
-
----
-
-## MIGRATION PLAN — single-page HTML → Jekyll
-
-Goal: each release becomes a Markdown post with its own URL + an auto-generated
-RSS feed, while the design above is preserved exactly. GitHub Pages runs Jekyll
-natively, so **no GitHub Actions needed** — the required plugins (`jekyll-feed`,
-`jekyll-sitemap`) are on the Pages allowlist.
-
-### Target structure
+## Site structure
 ```
 /
-├── _config.yml          # site config + plugins (jekyll-feed, jekyll-sitemap)
-├── index.html           # homepage — becomes a template that lists posts
-├── CNAME                # keep (domain)
-├── favicon.ico + icons  # keep at root
-├── og-image.png         # keep at root
+├── _config.yml            # site config, permalink /:title/, plugins, home_post_limit: 10
+├── Gemfile / Gemfile.lock # github-pages gem (Jekyll 3.10, matches Pages)
+├── index.html             # homepage template: hero, find-me, posts loop, tour, bio
+├── CNAME, robots.txt      # stay at root
+├── favicon.ico, icon-*.png, apple-touch-icon.png, og-image.png  # stay at root
 ├── _layouts/
-│   ├── default.html     # shared shell: <head> meta, nav, footer, the egg,
-│   │                    #   the watermark easter egg, and the dark-mode CSS
-│   └── release.html     # per-release page layout
-├── _posts/              # one Markdown file per release
+│   ├── default.html       # shared shell: <head> meta+JSON-LD, nav, footer, watermark
+│   └── release.html       # per-release page
+├── _includes/
+│   ├── service-icons.svg  # the 10 icon <symbol> defs (used once per page)
+│   └── release-box.html   # homepage "Latest" box (takes post=...)
+├── _posts/
 │   ├── 2026-04-01-placid.md
 │   └── 2026-05-01-echoic.md
 ├── assets/
-│   ├── css/style.css    # all the CSS moved out of index.html into one file
+│   ├── css/style.css      # ALL styles (single stylesheet)
 │   └── images/
-│       ├── releases/    # per-release art (echoic.jpeg, placid.jpg, ...)
-│       └── grantone.jpg # bio photo
-└── feed.xml + sitemap.xml  # AUTO-GENERATED by the plugins — don't hand-edit
+│       ├── releases/      # per-release art (echoic-web.jpeg, placid.jpg)
+│       └── grantone.jpg   # bio photo
+└── feed.xml + sitemap.xml # AUTO-generated — do not hand-edit
 ```
 
-### Post front-matter shape (decide final fields with owner)
-Each `_posts/YYYY-MM-DD-slug.md` looks like:
-```
+### Post front-matter (all fields; optional ones render only when present)
+```yaml
 ---
 layout: release
+tag: New Release          # pill category (always); e.g. could be "Tour" later
+type: Single              # Single | EP | Album (pill, releases only)
 title: Echoic
 date: 2026-05-01
-art: echoic.jpeg
-apple:    https://music.apple.com/...
-bandcamp: https://blueegg.bandcamp.com/track/echoic
-soundcloud: https://soundcloud.com/blueeggclub/echoic
-spotify:  https://open.spotify.com/album/...
-# Future optional fields the owner wants room for:
-# credits: |
+art: echoic-web.jpeg      # file in assets/images/releases/
+# genre: Techno           # meta row + JSON-LD
+# label: Self-released    # meta row
+bandcamp:   https://...   # Buy
+apple: …  spotify: …  amazon: …  youtube: …  pandora: …
+soundcloud: …  iheart: …  deezer: …  tidal: …   # Listen
+# tracklist:              # optional (EP/album)
+#   - { title: "…", duration: "4:12" }
+# production_notes: |      # optional Markdown (gear + technique). The "Liner
+#   …                       #   notes →" homepage link shows when this OR
+# credits: |               #   credits OR tracklist is present.
 #   Written and produced by Grant Goddard
-# gear: |
-#   Modular synth, CDJs, drum voices
 ---
-
-I didn't go TOO crazy with panning on this one.
+Body = the short teaser shown in the box and at the top of the release page.
 ```
-Body text (and future credits/gear) renders through the `release` layout into
-the same visual style as the current news boxes.
 
-### Open decisions to confirm with the owner before/while migrating
-1. **Post URL style** — `bluee.gg/echoic/` vs `bluee.gg/releases/echoic/` vs
-   `bluee.gg/news/echoic/`. (Owner leaning unspecified — ask.)
-2. **Credits + equipment fields** — build them into the layout now (rendered
-   only when present) so future longer posts are ready.
-3. **Homepage list length** — show all posts, or latest N with older ones still
-   at their own URLs. Relevant within a year at monthly cadence.
-4. **Move images into `/assets/images/`** (tidier, must update paths) vs keep at
-   root (simpler). Owner open to moving for cleanliness.
-
-### Migration guardrails
-- The site must look **pixel-identical** after migration — same fonts, colors,
-  dark mode, dividers, egg, watermark easter egg. Jekyll changes how pages are
-  *generated*, not how they look.
-- Move CSS to `assets/css/style.css` and link it from `default.html` so every
-  page (home + releases) shares one stylesheet.
-- Verify locally with `bundle exec jekyll serve` before pushing.
-- Keep `robots.txt`; let `jekyll-sitemap` generate `sitemap.xml` and
-  `jekyll-feed` generate `feed.xml`. Add the feed discovery link to `<head>`:
-  `<link rel="alternate" type="application/rss+xml" title="Blue Egg" href="/feed.xml">`.
+The pill reads `tag · type`. The card meta row reads `genre · label · date`
+(separators only between present items; date always shows).
 
 ---
 
 ## Deploy workflow
-- Edit locally → review diffs → commit → push to `main`.
+- Edit locally → `bundle exec jekyll serve` to verify → commit → push to `main`.
 - GitHub Pages auto-builds (Jekyll) and deploys to bluee.gg in ~1–2 min.
-- After a new post: just add the `_posts/*.md` file + its art in
+- **Adding a release:** drop a `_posts/YYYY-MM-DD-slug.md` + its art in
   `assets/images/releases/`. The homepage list, the release page, the RSS feed,
   and the sitemap all update automatically. No other files to touch.

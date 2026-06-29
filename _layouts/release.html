@@ -1,0 +1,77 @@
+---
+layout: default
+---
+<article>
+
+  <!-- lead card: the same news box, larger art -->
+  <div class="release-card">
+    <div class="release-card-inner">
+      <div class="release-card-content">
+        <span class="release-pill">{{ page.tag | default: "New Release" }}{% if page.type %} &middot; {{ page.type }}{% endif %}</span>
+        <h1 class="release-title">{{ page.title }}</h1>
+        {% if page.excerpt %}<p class="release-teaser">{{ page.excerpt | strip_html | normalize_whitespace }}</p>{% endif %}
+        <div class="release-meta">
+          {%- assign sep = false -%}
+          {%- if page.genre %}<span>{{ page.genre }}</span>{% assign sep = true %}{% endif -%}
+          {%- if page.label %}{% if sep %}<span class="meta-dot">&middot;</span>{% endif %}<span>{{ page.label }}</span>{% assign sep = true %}{% endif -%}
+          {%- if sep %}<span class="meta-dot">&middot;</span>{% endif %}<span>{{ page.date | date: "%B %Y" }}</span>
+        </div>
+      </div>
+      <div class="release-card-art">
+        <img src="{{ page.art | prepend: '/assets/images/releases/' | relative_url }}" alt="{{ page.title }} album art">
+      </div>
+    </div>
+  </div>
+
+  {% if page.bandcamp %}
+  <div class="release-section">
+    <div class="section-header"><span class="section-label">Buy</span><span class="section-line"></span></div>
+    <a class="buy-btn" href="{{ page.bandcamp }}"><svg class="buy-icon"><use href="#ic-bandcamp"/></svg>Buy on Bandcamp</a>
+  </div>
+  {% endif %}
+
+  {% if page.apple or page.spotify or page.amazon or page.youtube or page.pandora or page.soundcloud or page.iheart or page.deezer or page.tidal %}
+  <div class="release-section">
+    <div class="section-header"><span class="section-label">Listen</span><span class="section-line"></span></div>
+    <div class="listen-row">
+      {% if page.apple %}<a class="listen-link" href="{{ page.apple }}" aria-label="Apple Music"><svg class="listen-icon"><use href="#ic-apple"/></svg></a>{% endif %}
+      {% if page.spotify %}<a class="listen-link" href="{{ page.spotify }}" aria-label="Spotify"><svg class="listen-icon"><use href="#ic-spotify"/></svg></a>{% endif %}
+      {% if page.amazon %}<a class="listen-link" href="{{ page.amazon }}" aria-label="Amazon Music"><svg class="listen-icon"><use href="#ic-amazon"/></svg></a>{% endif %}
+      {% if page.youtube %}<a class="listen-link" href="{{ page.youtube }}" aria-label="YouTube Music"><svg class="listen-icon"><use href="#ic-youtube"/></svg></a>{% endif %}
+      {% if page.soundcloud %}<a class="listen-link" href="{{ page.soundcloud }}" aria-label="SoundCloud"><svg class="listen-icon"><use href="#ic-soundcloud"/></svg></a>{% endif %}
+      {% if page.pandora %}<a class="listen-link" href="{{ page.pandora }}" aria-label="Pandora"><svg class="listen-icon"><use href="#ic-pandora"/></svg></a>{% endif %}
+      {% if page.iheart %}<a class="listen-link" href="{{ page.iheart }}" aria-label="iHeartRadio"><svg class="listen-icon"><use href="#ic-iheart"/></svg></a>{% endif %}
+      {% if page.deezer %}<a class="listen-link" href="{{ page.deezer }}" aria-label="Deezer"><svg class="listen-icon"><use href="#ic-deezer"/></svg></a>{% endif %}
+      {% if page.tidal %}<a class="listen-link" href="{{ page.tidal }}" aria-label="Tidal"><svg class="listen-icon"><use href="#ic-tidal"/></svg></a>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if page.tracklist %}
+  <div class="release-section">
+    <div class="section-header"><span class="section-label">Tracklist</span><span class="section-line"></span></div>
+    <ul class="tracklist">
+      {% for track in page.tracklist %}
+      <li><span class="track-num">{{ forloop.index }}</span><span>{{ track.title }}</span>{% if track.duration %}<span class="track-dur">{{ track.duration }}</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if page.production_notes %}
+  <div class="release-section">
+    <div class="section-header"><span class="section-label">Production Notes</span><span class="section-line"></span></div>
+    <div class="liner-body">{{ page.production_notes | markdownify }}</div>
+  </div>
+  {% endif %}
+
+  {% if page.credits %}
+  <div class="release-section">
+    <div class="section-header"><span class="section-label">Credits</span><span class="section-line"></span></div>
+    <div class="liner-body">{{ page.credits | markdownify }}</div>
+  </div>
+  {% endif %}
+
+  <a class="release-back" href="/">&larr; Home</a>
+
+</article>

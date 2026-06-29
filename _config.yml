@@ -1,0 +1,34 @@
+title: Blue Egg
+description: Electronic music from Los Angeles. Producer and synthesist Grant Goddard.
+url: "https://bluee.gg"
+baseurl: ""
+lang: en
+timezone: America/Los_Angeles
+
+# Bare-slug release URLs, e.g. https://bluee.gg/echoic/
+permalink: /:title/
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Every post is a release page unless it says otherwise.
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: release
+
+# Homepage shows at most this many releases (older ones still live at their URLs).
+home_post_limit: 10
+
+# Keep these out of the built site.
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - CLAUDE.md
+  - README.md
+  - SETUP-CHECKLIST.md
+  - vendor
+  - .gitignore

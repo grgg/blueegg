@@ -4,3 +4,9 @@ SETUP-CHECKLIST.md
 # Editor / OS cruft
 .nova/
 .DS_Store
+
+# Jekyll build artifacts
+_site/
+.jekyll-cache/
+.jekyll-metadata
+vendor/

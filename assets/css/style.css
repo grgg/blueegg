@@ -1,0 +1,280 @@
+/* ===========================================================
+   Blue Egg — site styles
+   Extracted from the original single-page index.html (kept
+   pixel-identical), with release-page + streaming-link
+   components added for the Jekyll build.
+   =========================================================== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #ffffff;
+  --surface: #f7f7f5;
+  --border: rgba(0,0,0,0.1);
+  --text: #0f0f0f;
+  --muted: rgba(15,15,15,0.45);
+  --accent: #1a56db;
+  --mono: 'DM Mono', monospace;
+  --serif: 'EB Garamond', serif;
+  --logo-text: #0f0f0f;
+  --nav-bg: rgba(255,255,255,0.92);
+  --text-strong: rgba(15,15,15,0.82);
+  --text-faint: rgba(15,15,15,0.3);
+  --text-fainter: rgba(15,15,15,0.25);
+  --text-faintest: rgba(15,15,15,0.2);
+  --egg-divider: rgba(0,0,0,0.3);
+  --accent-underline: rgba(26,86,219,0.3);
+  --accent-hover-border: rgba(26,86,219,0.4);
+  --accent-hover-bg: rgba(26,86,219,0.04);
+  --watermark: rgba(15,15,15,0.08);
+}
+
+/* ===========================================================
+   DARK MODE — activates automatically when the visitor's
+   system/browser is set to dark. Brand blue is brightened so
+   it keeps the same *perceived* color against the dark bg, and
+   the accent + logo egg move together so they always match.
+   =========================================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d0f14;
+    --surface: #16181f;
+    --border: rgba(255,255,255,0.12);
+    --text: #e8e8ea;
+    --muted: rgba(232,232,234,0.5);
+    --accent: #5b8def;
+    --logo-text: #e8e8ea;
+    --nav-bg: rgba(13,15,20,0.92);
+    --text-strong: rgba(232,232,234,0.85);
+    --text-faint: rgba(232,232,234,0.4);
+    --text-fainter: rgba(232,232,234,0.35);
+    --text-faintest: rgba(232,232,234,0.3);
+    --egg-divider: rgba(255,255,255,0.35);
+    --accent-underline: rgba(91,141,239,0.4);
+    --accent-hover-border: rgba(91,141,239,0.5);
+    --accent-hover-bg: rgba(91,141,239,0.08);
+    --watermark: rgba(232,232,234,0.08);
+  }
+}
+body { background: var(--bg); color: var(--text); font-family: var(--serif); min-height: 100vh; font-size: 16px; line-height: 1.7; }
+.site { max-width: 720px; margin: 0 auto; padding: 0 24px 80px; }
+
+nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border); margin-bottom: 64px; position: sticky; top: 0; background: var(--nav-bg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100; margin-left: -24px; margin-right: -24px; }
+.nav-name { font-family: var(--mono); font-size: 13px; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; text-decoration: none; }
+.nav-links { display: flex; gap: 24px; }
+.nav-links a { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+
+.hero { margin-bottom: 32px; display: flex; justify-content: center; }
+.hero-logo { width: 100%; max-width: 660px; display: block; }
+
+.hero-links { margin-bottom: 64px; }
+.hero-links .social-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+
+section { margin-bottom: 72px; scroll-margin-top: 72px; }
+.section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+.section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; white-space: nowrap; }
+.section-line { flex: 1; height: 0; border-top: 1px solid var(--border); }
+
+.bio-inner { display: grid; grid-template-columns: 1fr 220px; gap: 32px; align-items: start; }
+.bio-text { font-size: 17px; line-height: 1.9; color: var(--text-strong); font-family: var(--serif); }
+.bio-text p + p { margin-top: 18px; }
+.bio-photo { width: 220px; display: block; height: 293px; object-fit: cover; border-radius: 2px; border: 2px solid var(--accent); }
+.bio-caption { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; color: var(--muted); margin-top: 10px; }
+
+/* News */
+.news-list { display: flex; flex-direction: column; gap: 16px; }
+.news-box { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.news-inner { display: flex; align-items: stretch; }
+.news-content { flex: 1; min-width: 0; padding: 24px 28px; display: flex; flex-direction: column; }
+/*
+  Right column: fixed-square artwork at top, the "more" link pinned to the bottom
+  (margin-top: auto) so it lines up with the date on the left and fills the
+  otherwise-empty space below the image. align-self: stretch makes the column the
+  full card height; the 24px margin lives on the column so the art top still lines
+  up with the tag pill. Square art = no crop. The img fills it (object-fit: cover).
+*/
+.news-aside { flex-shrink: 0; align-self: stretch; display: flex; flex-direction: column; margin: 24px 28px 24px 0; }
+.news-thumb-wrap { width: 165px; height: 165px; flex-shrink: 0; overflow: hidden; border-radius: 2px; border: 2px solid var(--accent); display: block; }
+.news-thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
+.news-tag { display: inline-block; align-self: flex-start; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; margin-bottom: 14px; }
+.news-title { display: inline-block; align-self: flex-start; font-family: var(--serif); font-size: 22px; font-weight: 500; margin-bottom: 10px; color: var(--text); text-decoration: none; transition: color 0.2s; }
+.news-title:hover { color: var(--accent); }
+.news-body { font-family: var(--serif); font-size: 16px; color: var(--muted); line-height: 1.9; margin-bottom: 16px; }
+.news-body a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-underline); transition: border-color 0.2s; }
+.news-body a:hover { border-color: var(--accent); }
+.news-date { font-family: var(--mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.08em; }
+
+/* Homepage box actions: Buy + Listen icons.
+   Desktop: inline on one wrapping row (display:contents dissolves .listen-row
+   so its icons flow alongside the Buy button). Mobile: stacked + centered. */
+.news-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 18px; }
+.news-actions .listen-row { display: contents; }
+.news-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.news-more { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; white-space: nowrap; }
+.news-more:hover { color: var(--accent); }
+/* Desktop: the more-link lives at the bottom of the image column; the footer copy is hidden. */
+.news-more--aside { display: block; text-align: right; margin-top: auto; padding-top: 16px; }
+.news-foot .news-more { display: none; }
+.news-actions .buy-btn { font-size: 11px; padding: 9px 14px; }
+.news-actions .listen-link { width: 40px; height: 40px; }
+.news-actions .listen-icon, .news-actions .buy-icon { width: 15px; height: 15px; }
+
+.tour-list { display: flex; flex-direction: column; }
+.tour-item { display: grid; grid-template-columns: 90px 1fr auto; align-items: center; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+.tour-item:first-child { border-top: 1px solid var(--border); }
+.tour-date { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.06em; }
+.tour-venue { font-family: var(--serif); font-size: 15px; font-weight: 500; }
+.tour-location { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 3px; }
+.tour-ticket { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-decoration: none; border: 1px solid var(--border); border-radius: 3px; padding: 6px 12px; white-space: nowrap; transition: all 0.2s; }
+.tour-ticket:hover { color: var(--accent); border-color: var(--accent); }
+
+.social-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.social-divider { grid-column: 1 / -1; display: flex; align-items: center; margin: 6px 0; }
+.social-divider-line { flex: 1; height: 0; border-top: 1px solid var(--border); }
+.social-divider-icon { width: 10px; height: 12px; color: var(--egg-divider); fill: var(--egg-divider); margin: 0 8px; display: block; flex-shrink: 0; }
+.social-link { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 12px 12px; text-decoration: none; color: var(--text); transition: all 0.2s; }
+.social-link:hover { border-color: var(--accent-hover-border); background: var(--accent-hover-bg); }
+.social-icon { width: 16px; height: 16px; flex-shrink: 0; fill: var(--muted); transition: fill 0.2s; }
+.social-link:hover .social-icon { fill: var(--accent); }
+.social-name { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--muted); transition: color 0.2s; white-space: nowrap; }
+.social-link:hover .social-name { color: var(--accent); }
+
+/* Hero find-me links — icon-only rows (music + "elsewhere"), egg divider between */
+.find-me { margin-bottom: 64px; }
+.find-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.find-divider { display: flex; align-items: center; margin: 14px auto; max-width: 520px; }
+.find-divider-line { flex: 1; height: 0; border-top: 1px solid var(--border); }
+.find-divider-egg { width: 10px; height: 12px; color: var(--egg-divider); fill: var(--egg-divider); margin: 0 8px; display: block; flex-shrink: 0; }
+/* tooltip on every streaming icon (hero, homepage boxes, release pages) —
+   reads the existing aria-label, so there's no extra markup and it stays accessible */
+.listen-link::after { content: attr(aria-label); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%) translateY(3px); background: var(--text); color: var(--bg); font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; white-space: nowrap; padding: 5px 8px; border-radius: 3px; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .18s, transform .18s, visibility .18s; z-index: 50; }
+.listen-link:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
+/* ===========================================================
+   RELEASE PAGE + streaming-link components (new in Jekyll)
+   =========================================================== */
+
+/* shared Buy button — same .social-link treatment as the Listen icons
+   (muted, hover->accent); it stands out via its text label + own section. */
+.buy-btn { display: inline-flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-decoration: none; border: 1px solid var(--border); border-radius: 4px; padding: 11px 18px; background: var(--surface); transition: all 0.2s; }
+.buy-btn:hover { border-color: var(--accent-hover-border); background: var(--accent-hover-bg); color: var(--accent); }
+.buy-icon { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+/* Listen icons — icon-only version of .social-link */
+.listen-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.listen-link { position: relative; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; text-decoration: none; transition: all 0.2s; }
+.listen-link:hover { border-color: var(--accent-hover-border); background: var(--accent-hover-bg); }
+.listen-icon { width: 16px; height: 16px; fill: var(--muted); transition: fill 0.2s; }
+.listen-link:hover .listen-icon { fill: var(--accent); }
+
+/* lead card — the same news box, larger art, date/genre/label pinned to bottom */
+.release-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 56px; }
+.release-card-inner { display: flex; align-items: stretch; }
+.release-card-content { flex: 1; min-width: 0; padding: 24px 28px; display: flex; flex-direction: column; }
+.release-card-art { width: 240px; height: 240px; flex-shrink: 0; align-self: flex-start; overflow: hidden; border-radius: 2px; margin: 24px 28px 24px 0; border: 2px solid var(--accent); }
+.release-card-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.release-pill { display: inline-block; align-self: flex-start; background: var(--accent); color: #fff; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; margin-bottom: 14px; }
+.release-title { font-family: var(--serif); font-size: 26px; font-weight: 500; margin-bottom: 10px; line-height: 1.25; }
+.release-teaser { font-family: var(--serif); font-size: 16px; color: var(--muted); line-height: 1.9; }
+.release-meta { margin-top: auto; padding-top: 20px; font-family: var(--mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.08em; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.meta-dot { color: var(--text-faintest); }
+
+.release-section { margin-bottom: 52px; }
+.liner-body { font-family: var(--serif); font-size: 16px; line-height: 1.9; color: var(--text-strong); }
+.liner-body ul { margin: 0 0 14px 20px; }
+.liner-body p + p { margin-top: 14px; }
+.liner-body a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-underline); transition: border-color 0.2s; }
+.liner-body a:hover { border-color: var(--accent); }
+
+.tracklist { list-style: none; }
+.tracklist li { display: flex; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--border); font-family: var(--serif); font-size: 16px; align-items: baseline; }
+.tracklist li:first-child { border-top: 1px solid var(--border); }
+.track-num { font-family: var(--mono); font-size: 12px; color: var(--accent); min-width: 20px; }
+.track-dur { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--text-faint); }
+
+.release-back { display: inline-block; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.release-back:hover { color: var(--accent); }
+
+footer { border-top: 1px solid var(--border); padding-top: 32px; margin-top: 80px; display: flex; justify-content: space-between; align-items: center; }
+.footer-name { font-family: var(--mono); font-size: 12px; color: var(--text-fainter); letter-spacing: 0.1em; text-transform: uppercase; }
+.footer-copy { font-family: var(--mono); font-size: 11px; color: var(--text-faintest); }
+
+/* Footer watermark easter egg — a faint egg that reveals a Pierce & Pierce-style card on hover */
+.footer-watermark { position: relative; display: flex; align-items: center; cursor: help; }
+.footer-watermark-egg { width: 11px; height: 13px; color: var(--watermark); fill: var(--watermark); display: block; transition: color 0.3s, fill 0.3s; }
+.footer-watermark:hover .footer-watermark-egg { color: var(--text-faint); fill: var(--text-faint); }
+.footer-watermark::after {
+  content: "Look at that subtle off-white coloring.\A The tasteful thickness of it.\A Oh my God, it even has a watermark.";
+  white-space: pre;
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: #f4f1ea;
+  border: 1px solid rgba(0,0,0,0.18);
+  border-radius: 2px;
+  padding: 22px 30px;
+  font-family: var(--serif);
+  font-size: 12.5px;
+  line-height: 1.85;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s, transform 0.35s, visibility 0.35s;
+  pointer-events: none;
+  z-index: 200;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.22);
+}
+.footer-watermark:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 560px) {
+  .bio-inner { grid-template-columns: 1fr; }
+  .bio-photo { width: 100% !important; height: auto !important; aspect-ratio: 3 / 4; object-fit: cover; }
+
+  /* On mobile: stack image above content, square crop */
+  .news-inner { flex-direction: column-reverse; }
+  .news-content { padding: 20px; }
+  .news-thumb-wrap { width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; margin: 0 !important; border-radius: 0 !important; border: none !important; }
+  .news-thumb { width: 100%; height: 100%; }
+  /* Mobile: image is full-width on top, so the more-link moves into the footer */
+  .news-aside { margin: 0; }
+  .news-more--aside { display: none; }
+  .news-foot .news-more { display: inline-block; }
+
+  /* Mobile homepage actions: stack Buy above the icon row and center both */
+  .news-actions { flex-direction: column; align-items: center; gap: 10px; }
+  .news-actions .listen-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+
+  /* Hero find-me: locked grids on mobile so they never wrap raggedly */
+  .find-row--music { display: grid; grid-template-columns: repeat(5, 44px); justify-content: center; gap: 10px; }
+  .find-row--elsewhere { display: grid; grid-template-columns: repeat(4, 44px); justify-content: center; gap: 10px; }
+
+  /* Release lead card: art full-width on top, like the news box */
+  .release-card-inner { flex-direction: column-reverse; }
+  .release-card-content { padding: 22px; }
+  .release-card-art { width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; margin: 0 !important; border-radius: 0 !important; border: none !important; }
+  .release-title { font-size: 24px; }
+
+  .social-grid { grid-template-columns: 1fr 1fr; }
+  .hero-links .social-grid { grid-template-columns: 1fr 1fr; }
+  .tour-item { grid-template-columns: 70px 1fr auto; gap: 10px; }
+  .tour-ticket { font-size: 10px; padding: 5px 8px; }
+  nav { flex-direction: column; gap: 16px; align-items: flex-start; }
+  section { scroll-margin-top: 130px; }
+
+  /* Watermark card: center in viewport on mobile so it never clips at screen edges */
+  .footer-watermark::after {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) translateY(4px);
+    white-space: normal;
+    width: max-content;
+    max-width: calc(100vw - 40px);
+  }
+  .footer-watermark:hover::after { transform: translateX(-50%) translateY(0); }
+}

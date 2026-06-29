@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'en' }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+{%- if page.title and page.title != site.title -%}
+  {%- assign full_title = page.title | append: " · " | append: site.title -%}
+{%- else -%}
+  {%- assign full_title = site.title -%}
+{%- endif -%}
+{%- assign page_desc = page.excerpt | default: page.description | default: site.description | strip_html | normalize_whitespace -%}
+{%- if page.art -%}
+  {%- assign og_image = page.art | prepend: "/assets/images/releases/" | absolute_url -%}
+{%- else -%}
+  {%- assign og_image = "/og-image.png" | absolute_url -%}
+{%- endif -%}
+
+<title>{{ full_title }}</title>
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+
+<!-- Theme color — browser chrome on mobile, matched to page background per scheme -->
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d0f14" media="(prefers-color-scheme: dark)">
+
+<!-- Apple web app meta tags (affects "Add to Home Screen" experience) -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Blue Egg">
+
+<meta name="description" content="{{ page_desc }}">
+
+<!-- Open Graph -->
+<meta property="og:title" content="{{ full_title }}">
+<meta property="og:description" content="{{ page_desc }}">
+<meta property="og:type" content="{% if page.layout == 'release' %}music.song{% else %}website{% endif %}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:site_name" content="Blue Egg">
+<meta property="og:image" content="{{ og_image }}">
+{%- unless page.art %}
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+{%- endunless %}
+<meta property="og:image:alt" content="{% if page.art %}{{ page.title }} album art{% else %}Blue Egg logo{% endif %}">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ full_title }}">
+<meta name="twitter:description" content="{{ page_desc }}">
+<meta name="twitter:image" content="{{ og_image }}">
+
+<!-- Structured data -->
+{%- if page.layout == 'release' %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"MusicRecording","name":{{ page.title | jsonify }},"url":{{ page.url | absolute_url | jsonify }},"datePublished":"{{ page.date | date: '%Y-%m-%d' }}","image":{{ og_image | jsonify }},"byArtist":{"@type":"MusicGroup","name":"Blue Egg","url":"https://bluee.gg"}{% if page.genre %},"genre":{{ page.genre | jsonify }}{% endif %}{% if page.isrc %},"isrcCode":{{ page.isrc | jsonify }}{% endif %}}
+</script>
+{%- else %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"MusicGroup","name":"Blue Egg","url":"https://bluee.gg","genre":"Electronic","sameAs":["https://blueegg.bandcamp.com/","https://music.apple.com/us/artist/blue-egg/1709237243","https://open.spotify.com/artist/5YjeU3znfJ2FpbJ3e38LhX","https://music.amazon.com/artists/B0GXL2RW5B/blue-egg","https://music.youtube.com/channel/UCNNEL8FXW5NWnfWGqDTQoWg","https://www.pandora.com/artist/blue-egg/AR27ccfZZ7Vvtk6","https://soundcloud.com/blueeggclub","https://www.iheart.com/artist/blue-egg-50443833/","https://www.deezer.com/us/artist/385952371","https://tidal.com/artist/78118208","https://www.last.fm/music/blue+egg","https://www.instagram.com/blueegg","https://www.twitch.tv/blueeggclub","https://www.youtube.com/@blueeggclub"]}
+</script>
+{%- endif %}
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/icon-512.png" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="alternate" type="application/rss+xml" title="Blue Egg" href="{{ '/feed.xml' | absolute_url }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+{% include service-icons.svg %}
+<div class="site">
+
+  <nav role="navigation" aria-label="Main navigation">
+    <a href="/" class="nav-name" aria-label="Blue Egg — return to top">Blue Egg</a>
+    <div class="nav-links">
+      <a href="/#news">News</a>
+      <a href="/#dates">Dates</a>
+      <a href="/#bio">Bio</a>
+    </div>
+  </nav>
+
+  {{ content }}
+
+  <footer role="contentinfo">
+    <div class="footer-name">Blue Egg</div>
+    <div class="footer-watermark" aria-hidden="true"><svg class="footer-watermark-egg" viewBox="4 2 16 20" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C16.4183 22 20 18.4183 20 14C20 9.58172 16.4183 2 12 2C7.58172 2 4 9.58172 4 14C4 18.4183 7.58172 22 12 22Z" fill="currentColor"/></svg></div>
+    <div class="footer-copy">est 2026</div>
+  </footer>
+
+</div>
+</body>
+</html>

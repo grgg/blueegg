@@ -1,0 +1,35 @@
+{%- comment -%}
+  Homepage "Latest" box for a single release post.
+  Usage: {% include release-box.html post=post %}
+  Desktop: Buy + the 5 primary services inline; the "more" link sits at the bottom
+  of the image column. The full 10 services live on the release page.
+  Mobile: image goes full-width on top, so the "more" link moves into the footer.
+{%- endcomment -%}
+{%- capture more_label -%}{% if include.post.production_notes or include.post.credits or include.post.tracklist %}Liner notes &rarr;{% else %}Full release &rarr;{% endif %}{%- endcapture -%}
+<div class="news-box" role="article">
+  <div class="news-inner">
+    <div class="news-content">
+      <span class="news-tag">{{ include.post.tag | default: "New Release" }}{% if include.post.type %} &middot; {{ include.post.type }}{% endif %}</span>
+      <a class="news-title" href="{{ include.post.url | relative_url }}">{{ include.post.title }}</a>
+      {% if include.post.excerpt %}<p class="news-body">{{ include.post.excerpt | strip_html | normalize_whitespace }}</p>{% endif %}
+      <div class="news-actions">
+        {% if include.post.bandcamp %}<a class="buy-btn" href="{{ include.post.bandcamp }}"><svg class="buy-icon"><use href="#ic-bandcamp"/></svg>Buy on Bandcamp</a>{% endif %}
+        <div class="listen-row">
+          {% if include.post.apple %}<a class="listen-link" href="{{ include.post.apple }}" aria-label="Apple Music"><svg class="listen-icon"><use href="#ic-apple"/></svg></a>{% endif %}
+          {% if include.post.spotify %}<a class="listen-link" href="{{ include.post.spotify }}" aria-label="Spotify"><svg class="listen-icon"><use href="#ic-spotify"/></svg></a>{% endif %}
+          {% if include.post.amazon %}<a class="listen-link" href="{{ include.post.amazon }}" aria-label="Amazon Music"><svg class="listen-icon"><use href="#ic-amazon"/></svg></a>{% endif %}
+          {% if include.post.youtube %}<a class="listen-link" href="{{ include.post.youtube }}" aria-label="YouTube Music"><svg class="listen-icon"><use href="#ic-youtube"/></svg></a>{% endif %}
+          {% if include.post.soundcloud %}<a class="listen-link" href="{{ include.post.soundcloud }}" aria-label="SoundCloud"><svg class="listen-icon"><use href="#ic-soundcloud"/></svg></a>{% endif %}
+        </div>
+      </div>
+      <div class="news-foot">
+        <span class="news-date">{{ include.post.date | date: "%B %Y" }}</span>
+        <a class="news-more news-more--foot" href="{{ include.post.url | relative_url }}">{{ more_label }}</a>
+      </div>
+    </div>
+    <div class="news-aside">
+      <a class="news-thumb-wrap" href="{{ include.post.url | relative_url }}"><img class="news-thumb" src="{{ include.post.art | prepend: '/assets/images/releases/' | relative_url }}" alt="{{ include.post.title }} album art" loading="lazy"></a>
+      <a class="news-more news-more--aside" href="{{ include.post.url | relative_url }}">{{ more_label }}</a>
+    </div>
+  </div>
+</div>
