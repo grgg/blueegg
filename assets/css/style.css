@@ -211,6 +211,9 @@ section { margin-bottom: 72px; scroll-margin-top: 72px; }
 .release-back { display: inline-block; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
 .release-back:hover { color: var(--accent); }
 
+/* "find me elsewhere" social row at the bottom of a release page (between ← Home and the footer) */
+.release-social { display: flex; justify-content: center; gap: 10px; margin-top: 36px; }
+
 footer { border-top: 1px solid var(--border); padding-top: 32px; margin-top: 80px; display: flex; justify-content: space-between; align-items: center; }
 .footer-name { font-family: var(--mono); font-size: 12px; color: var(--text-fainter); letter-spacing: 0.1em; text-transform: uppercase; }
 .footer-copy { font-family: var(--mono); font-size: 11px; color: var(--text-faintest); }
