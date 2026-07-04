@@ -32,11 +32,11 @@ sitemap: false
 {% if post.spotify %}{% if sep %} &middot; {% endif %}<a href="{{ post.spotify }}">Spotify</a>{% assign sep = true %}{% endif %}
 {% if post.youtube %}{% if sep %} &middot; {% endif %}<a href="{{ post.youtube }}">YouTube Music</a>{% assign sep = true %}{% endif %}
 {% if post.soundcloud %}{% if sep %} &middot; {% endif %}<a href="{{ post.soundcloud }}">SoundCloud</a>{% assign sep = true %}{% endif %}
-{% if post.tidal %}{% if sep %} &middot; {% endif %}<a href="{{ post.tidal }}">Tidal</a>{% assign sep = true %}{% endif %}
-{% if post.deezer %}{% if sep %} &middot; {% endif %}<a href="{{ post.deezer }}">Deezer</a>{% assign sep = true %}{% endif %}
 {% if post.amazon %}{% if sep %} &middot; {% endif %}<a href="{{ post.amazon }}">Amazon Music</a>{% assign sep = true %}{% endif %}
-{% if post.iheart %}{% if sep %} &middot; {% endif %}<a href="{{ post.iheart }}">iHeartRadio</a>{% assign sep = true %}{% endif %}
 {% if post.pandora %}{% if sep %} &middot; {% endif %}<a href="{{ post.pandora }}">Pandora</a>{% assign sep = true %}{% endif %}
+{% if post.tidal %}{% if sep %} &middot; {% endif %}<a href="{{ post.tidal }}">Tidal</a>{% assign sep = true %}{% endif %}
+{% if post.iheart %}{% if sep %} &middot; {% endif %}<a href="{{ post.iheart }}">iHeartRadio</a>{% assign sep = true %}{% endif %}
+{% if post.deezer %}{% if sep %} &middot; {% endif %}<a href="{{ post.deezer }}">Deezer</a>{% assign sep = true %}{% endif %}
 </p>
 <p><a href="{{ post.url | absolute_url }}">Open the release page &rarr;</a></p>
     ]]></content>

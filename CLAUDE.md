@@ -150,8 +150,11 @@ faint: `--egg-divider` (brand egg in the dividers), `--border` (hairlines), and
   consistent — earlier accent-filled versions were rejected).
 - **Listen** = an icon-only row.
 - **10 services, fixed order, Bandcamp first (artist-forward):** Bandcamp(Buy),
-  Apple Music, Spotify, YouTube Music, SoundCloud, Tidal, Deezer, Amazon Music,
-  iHeartRadio, Pandora. Render only when the post has that URL.
+  Apple Music, Spotify, YouTube Music, SoundCloud, Amazon Music, Pandora, Tidal,
+  iHeartRadio, Deezer. Render only when the post has that URL. This same order is
+  used everywhere the services are listed: the hero find-me row (`index.html`),
+  the release-page Listen row (`release.html`), the homepage Listen dropdown
+  (`release-box.html`), and the Atom feed (`feed.xml`).
 - **Homepage box** shows Buy + 5 services (Apple, Spotify, YouTube Music,
   SoundCloud, Amazon) inline on desktop, stacked + centered on mobile.
   **Release page** shows the full 10.
@@ -242,13 +245,19 @@ pseudo-elements. Keep all rules/lines as real elements with borders.
 
 ## Social / streaming URLs
 
-### Hero "find me" grid (homepage, 8 links in grid order — artist profiles)
-Row 1 (music): Apple Music `music.apple.com/us/artist/blue-egg/1709237243`,
-Bandcamp `blueegg.bandcamp.com`, Spotify
-`open.spotify.com/artist/5YjeU3znfJ2FpbJ3e38LhX`, Tidal `tidal.com/artist/78118208`.
-Row 2 (social): SoundCloud `soundcloud.com/blueeggclub`, Instagram
-`instagram.com/blueegg`, Twitch `twitch.tv/blueeggclub`, YouTube
-`youtube.com/@blueeggclub`.
+### Hero "find me" grid (homepage — two icon rows, artist profiles)
+Row 1 (music, 10, same fixed order as the streaming list): Bandcamp
+`blueegg.bandcamp.com`, Apple Music `music.apple.com/us/artist/blue-egg/1709237243`,
+Spotify `open.spotify.com/artist/5YjeU3znfJ2FpbJ3e38LhX`, YouTube Music
+`music.youtube.com/channel/UCNNEL8FXW5NWnfWGqDTQoWg`, SoundCloud
+`soundcloud.com/blueeggclub`, Amazon Music
+`music.amazon.com/artists/B0GXL2RW5B/blue-egg`, Pandora
+`pandora.com/artist/blue-egg/AR27ccfZZ7Vvtk6`, Tidal `tidal.com/artist/78118208`,
+iHeartRadio `iheart.com/artist/blue-egg-50443833/`, Deezer
+`deezer.com/us/artist/385952371`.
+Row 2 (elsewhere, social): Instagram `instagram.com/blueegg`, Twitch
+`twitch.tv/blueeggclub`, YouTube `youtube.com/@blueeggclub`, Last.fm
+`last.fm/music/blue+egg`.
 
 ### Artist profiles for `sameAs` (all known, kept in `default.html`)
 Bandcamp `blueegg.bandcamp.com/`, Apple Music `.../artist/blue-egg/1709237243`,
