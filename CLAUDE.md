@@ -156,6 +156,23 @@ faint: `--egg-divider` (brand egg in the dividers), `--border` (hairlines), and
   SoundCloud, Amazon) inline on desktop, stacked + centered on mobile.
   **Release page** shows the full 10.
 
+### Tracklist (release page)
+- A CSS **grid** so key / Camelot / BPM / length line up in columns down a
+  multi-track release; a single track reads cleanly in the same frame. Each
+  `<li>` is a `grid-template-columns: subgrid` row spanning the shared columns,
+  cells are pinned with explicit `grid-column`, and the divider border lives on
+  the `<li>` (not the cells) so it stays one continuous line. `.track-meta` is
+  `display: contents` so the spec spans become cells of the row grid; the middot
+  `.track-sep`s are hidden (columns replace them).
+- **Mobile** (`max-width: 560px`): the six columns can't fit, so the title takes
+  its own line and the specs drop to a second line as their own aligned columns
+  (a 1fr spacer pushes the length to the right edge). Requires subgrid (Baseline
+  2023); fine for the current browser targets.
+- key + BPM use `--text-strong` (DJ-critical), Camelot + length use `--muted`.
+- **Camelot is auto-derived** from `key` via `_data/camelot.yml` (a fixed 24-key
+  lookup with sharp+flat spellings, lowercased on match); a front-matter
+  `camelot:` on a track overrides it. So posts only need to set `key`.
+
 ### Dividers — dark-mode-plugin-safe
 All divider lines use `border-top: 1px solid var(--border)` (NOT
 `background: var(--border)`). This was a deliberate fix: auto-dark-mode browser
@@ -263,6 +280,8 @@ only when present.
 ├── _includes/
 │   ├── service-icons.svg  # the 10 icon <symbol> defs (used once per page)
 │   └── release-box.html   # homepage "Latest" box (takes post=...)
+├── _data/
+│   └── camelot.yml        # musical key → Camelot code lookup (tracklist)
 ├── _posts/
 │   ├── 2026-04-01-placid.md
 │   └── 2026-05-01-echoic.md
@@ -289,8 +308,14 @@ art: echoic-web.jpeg      # file in assets/images/releases/
 bandcamp:   https://...   # Buy
 apple: …  spotify: …  amazon: …  youtube: …  pandora: …
 soundcloud: …  iheart: …  deezer: …  tidal: …   # Listen
-# tracklist:              # optional (EP/album)
-#   - { title: "…", duration: "4:12" }
+# tracklist:              # optional; renders even for a single (one row)
+#   - { title: "…", key: "F# minor", bpm: 128, duration: "4:12" }
+#   # per-track, all optional. key + bpm + duration render as an aligned-column
+#   # grid (values line up down an EP). Desktop = one row; mobile = title on top
+#   # with the specs as columns beneath, length pinned right. key feeds the
+#   # visible text, the schema.org musicalKey, AND the displayed Camelot code
+#   # (auto-derived via _data/camelot.yml); bpm feeds text AND a JSON-LD Tempo
+#   # PropertyValue. Set `camelot:` on a track only to override the derived code.
 # production_notes: |      # optional Markdown (gear + technique). The "Liner
 #   …                       #   notes →" homepage link shows when this OR
 # credits: |               #   credits OR tracklist is present.

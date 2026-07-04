@@ -61,7 +61,7 @@
   {%- elsif dparts.size == 2 -%}{%- capture iso_dur -%}PT{{ dparts[0] }}M{{ dparts[1] }}S{%- endcapture -%}{%- endif -%}
 {%- endif -%}
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"MusicRecording","name":{{ page.title | jsonify }},"url":{{ page.url | absolute_url | jsonify }},"datePublished":"{{ page.date | date: '%Y-%m-%d' }}","image":{{ og_image | jsonify }},"byArtist":{"@type":"MusicGroup","name":"Blue Egg","url":"https://bluee.gg"}{% if page.genre %},"genre":{{ page.genre | jsonify }}{% endif %}{% if iso_dur != "" %},"duration":{{ iso_dur | jsonify }}{% endif %}{% if page.isrc %},"isrcCode":{{ page.isrc | jsonify }}{% endif %}}
+{"@context":"https://schema.org","@type":"MusicRecording","name":{{ page.title | jsonify }},"url":{{ page.url | absolute_url | jsonify }},"datePublished":"{{ page.date | date: '%Y-%m-%d' }}","image":{{ og_image | jsonify }},"byArtist":{"@type":"MusicGroup","name":"Blue Egg","url":"https://bluee.gg"}{% if page.genre %},"genre":{{ page.genre | jsonify }}{% endif %}{% if iso_dur != "" %},"duration":{{ iso_dur | jsonify }}{% endif %}{% if page.isrc %},"isrcCode":{{ page.isrc | jsonify }}{% endif %}{% if page.tracklist[0].key %},"recordingOf":{"@type":"MusicComposition","name":{{ page.title | jsonify }},"musicalKey":{{ page.tracklist[0].key | jsonify }}}{% endif %}{% if page.tracklist[0].bpm %},"additionalProperty":{"@type":"PropertyValue","name":"Tempo","value":{{ page.tracklist[0].bpm | jsonify }},"unitText":"BPM"}{% endif %}}
 </script>
 {%- else %}
 <script type="application/ld+json">

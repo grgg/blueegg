@@ -14,7 +14,7 @@ layout: default
           {%- assign sep = false -%}
           {%- if page.genre %}<span>{{ page.genre }}</span>{% assign sep = true %}{% endif -%}
           {%- if page.label %}{% if sep %}<span class="meta-dot">&middot;</span>{% endif %}<span>{{ page.label }}</span>{% assign sep = true %}{% endif -%}
-          {%- if sep %}<span class="meta-dot">&middot;</span>{% endif %}<span>{{ page.date | date: "%B %Y" }}</span>
+          {%- if sep %}<span class="meta-dot">&middot;</span>{% endif %}<span>{{ page.date | date: "%-d %B %Y" }}</span>
         </div>
       </div>
       <div class="release-card-art">
@@ -52,7 +52,24 @@ layout: default
     <div class="section-header"><h2 class="section-label">Tracklist</h2><span class="section-line"></span></div>
     <ul class="tracklist">
       {% for track in page.tracklist %}
-      <li><span class="track-num">{{ forloop.index }}</span><span>{{ track.title }}</span>{% if track.duration %}<span class="track-dur">{{ track.duration }}</span>{% endif %}</li>
+      <li>
+        <span class="track-num">{{ forloop.index }}</span>
+        <span class="track-title">{{ track.title }}</span>
+        {%- comment -%}Spec columns: key · Camelot · BPM · length. The Camelot code is
+            auto-derived from the key via _data/camelot.yml (front-matter `camelot:` overrides
+            it). Each part renders only when present; middots show on mobile, columns align on
+            desktop.{%- endcomment -%}
+        {%- assign spec = false -%}
+        {%- assign keyslug = track.key | downcase -%}
+        {%- assign camelot = site.data.camelot[keyslug] -%}
+        {%- if track.camelot %}{% assign camelot = track.camelot %}{% endif -%}
+        <span class="track-meta">
+          {%- if track.key %}<span class="track-key">{{ track.key }}</span>{% assign spec = true %}{% endif -%}
+          {%- if camelot %}{% if spec %}<span class="track-sep">·</span>{% endif %}<span class="track-camelot">{{ camelot }}</span>{% assign spec = true %}{% endif -%}
+          {%- if track.bpm %}{% if spec %}<span class="track-sep">·</span>{% endif %}<span class="track-bpm">{{ track.bpm }} BPM</span>{% assign spec = true %}{% endif -%}
+          {%- if track.duration %}{% if spec %}<span class="track-sep">·</span>{% endif %}<span class="track-dur">{{ track.duration }}</span>{% endif -%}
+        </span>
+      </li>
       {% endfor %}
     </ul>
   </div>

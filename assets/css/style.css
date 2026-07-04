@@ -218,11 +218,27 @@ section { margin-bottom: 72px; scroll-margin-top: 72px; }
 .liner-body a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-underline); transition: border-color 0.2s; }
 .liner-body a:hover { border-color: var(--accent); }
 
-.tracklist { list-style: none; }
-.tracklist li { display: flex; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--border); font-family: var(--serif); font-size: 16px; align-items: baseline; }
+/* Tracklist — a fixed-column grid so key / Camelot / BPM / length line up down a
+   multi-track release; a single track reads cleanly in the same frame. Each <li>
+   is a subgrid row spanning the shared columns, so values align across rows.
+   Explicit grid-column keeps every cell in its own column even if a field is
+   missing, and the divider border lives on the <li> so it stays one continuous
+   line. On mobile this all collapses to a stacked caption (see the media query). */
+.tracklist { list-style: none; display: grid; grid-template-columns: auto minmax(0,1fr) max-content max-content max-content max-content; }
+.tracklist li { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--border); font-family: var(--serif); font-size: 16px; }
 .tracklist li:first-child { border-top: 1px solid var(--border); }
-.track-num { font-family: var(--mono); font-size: 12px; color: var(--accent); min-width: 20px; }
-.track-dur { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--text-faint); }
+.track-meta { display: contents; }   /* dissolve so the specs become cells of the row grid */
+.track-sep { display: none; }        /* aligned columns replace the middots on desktop */
+.track-num { grid-column: 1; font-family: var(--mono); font-size: 12px; color: var(--accent); padding-right: 16px; }
+.track-title { grid-column: 2; min-width: 0; padding-right: 22px; }
+.track-key { grid-column: 3; }
+.track-camelot { grid-column: 4; }
+.track-bpm { grid-column: 5; }
+.track-dur { grid-column: 6; }
+.track-key, .track-camelot, .track-bpm, .track-dur { font-family: var(--mono); font-size: 12px; }
+.track-key, .track-camelot, .track-bpm { padding-right: 26px; }
+.track-key, .track-bpm { color: var(--text-strong); }
+.track-camelot, .track-dur { color: var(--muted); }
 
 .release-back { display: inline-block; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
 .release-back:hover { color: var(--accent); }
@@ -298,6 +314,21 @@ footer { border-top: 1px solid var(--border); padding-top: 32px; margin-top: 80p
   .release-card-content { padding: 22px; }
   .release-card-art { width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; margin: 0 !important; border-radius: 0 !important; border: none !important; }
   .release-title { font-size: 24px; }
+
+  /* Tracklist on mobile: the six columns can't fit one phone row, so the title
+     takes its own line and the specs drop to a second line as their OWN aligned
+     columns (still subgrid), so key / Camelot / BPM / length line up down a
+     multi-track release. Columns do the aligning; middots stay hidden, as on
+     desktop. A trailing 1fr column lets a long title use the full width. */
+  .tracklist { grid-template-columns: auto max-content max-content max-content 1fr max-content; column-gap: 14px; }
+  .tracklist li { row-gap: 5px; }
+  .track-num { grid-column: 1; grid-row: 1; padding-right: 0; }
+  .track-title { grid-column: 2 / -1; grid-row: 1; padding-right: 0; }
+  .track-key { grid-column: 2; grid-row: 2; padding-right: 0; }
+  .track-camelot { grid-column: 3; grid-row: 2; padding-right: 0; }
+  .track-bpm { grid-column: 4; grid-row: 2; padding-right: 0; }
+  /* the 1fr spacer sits in column 5, pushing the length out to the right edge */
+  .track-dur { grid-column: 6; grid-row: 2; padding-right: 0; }
 
   .social-grid { grid-template-columns: 1fr 1fr; }
   .hero-links .social-grid { grid-template-columns: 1fr 1fr; }
