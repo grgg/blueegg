@@ -351,14 +351,20 @@ The pill reads `tag · type`. The card meta row reads `genre · label · date`
 - **Future-dated posts publish themselves.** Jekyll skips posts dated in the
   future, and Pages only rebuilds on push, so a post written the night before its
   release date would otherwise sit unpublished. `.github/workflows/
-  publish-scheduled-posts.yml` asks GitHub to rebuild nightly at **08:10 UTC**
-  (01:10 PDT / 00:10 PST — always after local midnight, which is what Jekyll
-  checks against `timezone: America/Los_Angeles`), then verifies the newest
-  published post and the homepage return 200. So: commit and push the post
-  whenever it's written; it goes live on its own date. Run it early with
-  `gh workflow run publish-scheduled-posts.yml` if you need to publish sooner.
-  Don't move the cron earlier than 08:10 UTC: 00:10 PDT is 23:10 PST the
-  *previous* day in winter, which would miss by a full day.
+  publish-scheduled-posts.yml` asks GitHub to rebuild **twice nightly, at 07:10
+  and 08:10 UTC**, then verifies the newest published post and the homepage
+  return 200 (retrying a few times, since the CDN can lag a finished build). So:
+  commit and push the post whenever it's written; it goes live on its own date.
+  Run it early with `gh workflow run publish-scheduled-posts.yml` to publish
+  sooner.
+  **Why two runs:** they straddle DST so a post lands at ~00:10 local either way.
+  07:10 UTC is 00:10 PDT (publishes in summer) but 23:10 PST the *previous* day
+  (no-op in winter); 08:10 UTC is 01:10 PDT (no-op in summer) but 00:10 PST
+  (publishes in winter). The no-op run is genuinely harmless: rebuilding before
+  the date arrives still skips the post, and rebuilding after it is live
+  reproduces the same output. The redundancy also covers GitHub delaying or
+  dropping a scheduled run. Keep both; dropping either makes half the year
+  publish an hour late or, worse, a full day late.
 - **Pages deploys fail transiently.** Both "Deployment failed, try again later"
   and a `403`/`Failed to FinalizeArtifact` on artifact upload have hit this repo
   while the Jekyll build itself was fine. Retry (empty commit, re-run the job, or
