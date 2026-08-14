@@ -1,0 +1,94 @@
+name: Publish scheduled posts
+
+# WHY THIS EXISTS
+# Posts are dated with their real release date, which is often "tomorrow" at the
+# time of writing. Jekyll (and therefore GitHub Pages) skips future-dated posts,
+# and Pages only rebuilds when something is pushed -- so a post written the night
+# before its release date would sit unpublished until the next manual push.
+#
+# This job asks GitHub to rebuild the site once a night. The moment a post's date
+# has arrived in the site's timezone, that rebuild publishes it automatically.
+# Nothing needs to be pushed and no local machine needs to be awake.
+
+on:
+  schedule:
+    # 08:10 UTC = 01:10 America/Los_Angeles in PDT, 00:10 in PST.
+    # Deliberately not earlier: 00:10 PDT would be 23:10 PST the *previous* day
+    # in winter, when the post is still future-dated, and it would miss by a day.
+    - cron: '10 8 * * *'
+  workflow_dispatch:        # allows a manual run to test this workflow
+
+permissions:
+  contents: read            # to check out _posts for the verification step
+  pages: write              # to request a Pages build
+
+concurrency:
+  group: publish-scheduled-posts
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Request a Pages rebuild
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"
+
+      - name: Wait for the build to finish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for i in $(seq 1 40); do
+            latest=$(gh api "repos/${GITHUB_REPOSITORY}/pages/builds/latest")
+            status=$(echo "$latest" | jq -r '.status')
+            err=$(echo "$latest" | jq -r '.error.message // ""')
+            echo "[$i] status=$status ${err:+error=$err}"
+            case "$status" in
+              built)
+                echo "Pages build succeeded."
+                exit 0
+                ;;
+              errored)
+                echo "::error::Pages build errored: $err"
+                exit 1
+                ;;
+            esac
+            sleep 15
+          done
+          echo "::error::Timed out waiting for the Pages build to finish."
+          exit 1
+
+      - name: Verify the newest published post is actually live
+        run: |
+          # Posts are named YYYY-MM-DD-slug.md and sort chronologically, so the
+          # last one whose date has arrived is the newest that should be public.
+          today=$(TZ=America/Los_Angeles date +%F)
+          newest=""
+          for f in _posts/*.md; do
+            d=$(basename "$f" | cut -d- -f1-3)
+            if [[ ! "$d" > "$today" ]]; then newest="$f"; fi
+          done
+
+          if [ -z "$newest" ]; then
+            echo "No published posts found; skipping post check."
+          else
+            slug=$(basename "$newest" .md | cut -d- -f4-)
+            echo "Newest published post: $slug (from $newest)"
+            code=$(curl -sL -o /dev/null -w '%{http_code}' --max-time 30 "https://bluee.gg/$slug/")
+            echo "https://bluee.gg/$slug/ -> $code"
+            if [ "$code" != "200" ]; then
+              echo "::error::Newest published post /$slug/ returned $code"
+              exit 1
+            fi
+          fi
+
+          code=$(curl -sL -o /dev/null -w '%{http_code}' --max-time 30 https://bluee.gg/)
+          echo "https://bluee.gg/ -> $code"
+          if [ "$code" != "200" ]; then
+            echo "::error::Homepage returned $code"
+            exit 1
+          fi
+          echo "Site verified."
