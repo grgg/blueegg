@@ -6,7 +6,7 @@ name: Publish scheduled posts
 # and Pages only rebuilds when something is pushed -- so a post written the night
 # before its release date would sit unpublished until the next manual push.
 #
-# This job asks GitHub to rebuild the site once a night. The moment a post's date
+# This job asks GitHub to rebuild the site each night. The moment a post's date
 # has arrived in the site's timezone, that rebuild publishes it automatically.
 # Nothing needs to be pushed and no local machine needs to be awake.
 
@@ -22,7 +22,8 @@ on:
     # The "no-op" runs are harmless: a rebuild before the date arrives still skips
     # the future-dated post, and a rebuild after it is already live just produces
     # the same output again. The redundancy also covers GitHub occasionally
-    # delaying or dropping a scheduled run.
+    # delaying or dropping a scheduled run, and gives the later run a chance to
+    # recover if the earlier one hit a transient Pages failure.
     - cron: '10 7 * * *'
     - cron: '10 8 * * *'
   workflow_dispatch:        # allows a manual run to test this workflow
@@ -41,39 +42,58 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Request a Pages rebuild
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"
-
-      - name: Wait for the build to finish
+      - name: Request a Pages rebuild (retrying transient failures)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for i in $(seq 1 40); do
-            latest=$(gh api "repos/${GITHUB_REPOSITORY}/pages/builds/latest")
-            status=$(echo "$latest" | jq -r '.status')
-            err=$(echo "$latest" | jq -r '.error.message // ""')
-            echo "[$i] status=$status ${err:+error=$err}"
-            case "$status" in
-              built)
-                echo "Pages build succeeded."
-                exit 0
-                ;;
-              errored)
-                echo "::error::Pages build errored: $err"
-                exit 1
-                ;;
-            esac
-            sleep 15
+          # Pages on this repo intermittently fails with "Deployment failed, try
+          # again later" or a 403 "Failed to FinalizeArtifact" while the Jekyll
+          # build itself is fine. Those clear on a retry, so do that here rather
+          # than waiting for the next scheduled run (or a human) to notice.
+          for attempt in 1 2 3; do
+            echo "=== Build attempt $attempt ==="
+
+            # Remember the current build so we can tell the new one apart from it
+            # instead of reading a stale "built" before the new build registers.
+            prev=$(gh api "repos/${GITHUB_REPOSITORY}/pages/builds/latest" --jq '.created_at // ""' 2>/dev/null || echo "")
+
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds" >/dev/null
+
+            outcome="timeout"
+            for i in $(seq 1 30); do
+              sleep 15
+              latest=$(gh api "repos/${GITHUB_REPOSITORY}/pages/builds/latest" 2>/dev/null) || continue
+              created=$(echo "$latest" | jq -r '.created_at // ""')
+              status=$(echo "$latest" | jq -r '.status')
+              err=$(echo "$latest" | jq -r '.error.message // ""')
+
+              if [ -n "$prev" ] && [ "$created" = "$prev" ]; then
+                echo "  [$i] waiting for the new build to register"
+                continue
+              fi
+
+              echo "  [$i] status=$status ${err:+error=$err}"
+              case "$status" in
+                built)   outcome="built";   break ;;
+                errored) outcome="errored"; echo "  errored: $err"; break ;;
+              esac
+            done
+
+            if [ "$outcome" = "built" ]; then
+              echo "Pages build succeeded on attempt $attempt."
+              exit 0
+            fi
+            echo "Attempt $attempt did not succeed ($outcome)."
+            [ "$attempt" -lt 3 ] && sleep 30
           done
-          echo "::error::Timed out waiting for the Pages build to finish."
+
+          echo "::error::Pages build did not succeed after 3 attempts."
           exit 1
 
       - name: Verify the newest published post is actually live
         run: |
           # A freshly finished Pages build can take a few seconds to reach the CDN,
-          # so retry rather than emitting a false alarm at 12:10am.
+          # so retry rather than emitting a false alarm in the middle of the night.
           check_url() {
             local url="$1" code
             for attempt in 1 2 3 4 5; do
