@@ -12,9 +12,18 @@ name: Publish scheduled posts
 
 on:
   schedule:
-    # 08:10 UTC = 01:10 America/Los_Angeles in PDT, 00:10 in PST.
-    # Deliberately not earlier: 00:10 PDT would be 23:10 PST the *previous* day
-    # in winter, when the post is still future-dated, and it would miss by a day.
+    # Two runs an hour apart so a post goes live at ~00:10 local in BOTH halves of
+    # the year, without needing to know which side of DST we are on:
+    #
+    #   cron        PDT (summer)          PST (winter)
+    #   10 7 * * *  00:10 -> publishes    23:10 prev day -> no-op
+    #   10 8 * * *  01:10 -> no-op        00:10 -> publishes
+    #
+    # The "no-op" runs are harmless: a rebuild before the date arrives still skips
+    # the future-dated post, and a rebuild after it is already live just produces
+    # the same output again. The redundancy also covers GitHub occasionally
+    # delaying or dropping a scheduled run.
+    - cron: '10 7 * * *'
     - cron: '10 8 * * *'
   workflow_dispatch:        # allows a manual run to test this workflow
 
@@ -63,8 +72,22 @@ jobs:
 
       - name: Verify the newest published post is actually live
         run: |
+          # A freshly finished Pages build can take a few seconds to reach the CDN,
+          # so retry rather than emitting a false alarm at 12:10am.
+          check_url() {
+            local url="$1" code
+            for attempt in 1 2 3 4 5; do
+              code=$(curl -sL -o /dev/null -w '%{http_code}' --max-time 30 "$url")
+              echo "  $url -> $code (attempt $attempt)"
+              [ "$code" = "200" ] && return 0
+              sleep 10
+            done
+            return 1
+          }
+
           # Posts are named YYYY-MM-DD-slug.md and sort chronologically, so the
           # last one whose date has arrived is the newest that should be public.
+          # This uses the site's own timezone, matching what Jekyll checks.
           today=$(TZ=America/Los_Angeles date +%F)
           newest=""
           for f in _posts/*.md; do
@@ -77,18 +100,14 @@ jobs:
           else
             slug=$(basename "$newest" .md | cut -d- -f4-)
             echo "Newest published post: $slug (from $newest)"
-            code=$(curl -sL -o /dev/null -w '%{http_code}' --max-time 30 "https://bluee.gg/$slug/")
-            echo "https://bluee.gg/$slug/ -> $code"
-            if [ "$code" != "200" ]; then
-              echo "::error::Newest published post /$slug/ returned $code"
+            if ! check_url "https://bluee.gg/$slug/"; then
+              echo "::error::Newest published post /$slug/ is not serving 200"
               exit 1
             fi
           fi
 
-          code=$(curl -sL -o /dev/null -w '%{http_code}' --max-time 30 https://bluee.gg/)
-          echo "https://bluee.gg/ -> $code"
-          if [ "$code" != "200" ]; then
-            echo "::error::Homepage returned $code"
+          if ! check_url "https://bluee.gg/"; then
+            echo "::error::Homepage is not serving 200"
             exit 1
           fi
           echo "Site verified."
