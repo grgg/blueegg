@@ -348,6 +348,21 @@ The pill reads `tag · type`. The card meta row reads `genre · label · date`
   around 800–1000px (≈150–300KB). The art doubles as the per-release `og:image`
   (set to 800×800 in `default.html`). To shrink an oversized source with sips:
   `sips -Z 800 -s format jpeg -s formatOptions 68 file.jpg --out file.jpg`.
+- **Future-dated posts publish themselves.** Jekyll skips posts dated in the
+  future, and Pages only rebuilds on push, so a post written the night before its
+  release date would otherwise sit unpublished. `.github/workflows/
+  publish-scheduled-posts.yml` asks GitHub to rebuild nightly at **08:10 UTC**
+  (01:10 PDT / 00:10 PST — always after local midnight, which is what Jekyll
+  checks against `timezone: America/Los_Angeles`), then verifies the newest
+  published post and the homepage return 200. So: commit and push the post
+  whenever it's written; it goes live on its own date. Run it early with
+  `gh workflow run publish-scheduled-posts.yml` if you need to publish sooner.
+  Don't move the cron earlier than 08:10 UTC: 00:10 PDT is 23:10 PST the
+  *previous* day in winter, which would miss by a full day.
+- **Pages deploys fail transiently.** Both "Deployment failed, try again later"
+  and a `403`/`Failed to FinalizeArtifact` on artifact upload have hit this repo
+  while the Jekyll build itself was fine. Retry (empty commit, re-run the job, or
+  `gh workflow run publish-scheduled-posts.yml`) before investigating content.
 
 ---
 
